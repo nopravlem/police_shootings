@@ -1,0 +1,32 @@
+body {
+	background: #333;
+}
+
+#page_title {
+	color: #fff;
+	font-size: 35px;
+	text-align: center;
+	font-family: 'Montserrat', sans-serif;
+	margin: 15px 0;
+}
+
+.background {
+  fill: #333;
+  pointer-events: all;
+}
+
+.feature {
+  fill: #bae4f4;
+  cursor: pointer;
+}
+
+.feature.active {
+  fill: #e00269;
+}
+
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
