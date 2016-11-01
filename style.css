@@ -1,17 +1,24 @@
 body {
 	background: #333;
+
+	
 }
 
 #page_title {
 	color: #fff;
 	font-size: 35px;
 	text-align: center;
-	font-family: 'Montserrat', sans-serif;
 	margin: 15px 0;
+	font-family: 'Montserrat', sans-serif;
+}
+
+/*map things*/
+.us_country_map {
+	float: left;
 }
 
 .background {
-  fill: #333;
+  fill: #232323;
   pointer-events: all;
 }
 
@@ -29,4 +36,62 @@ body {
   stroke: #fff;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/*sunburst*/
+.sunburst {
+	float: left;
+}
+
+/*filter*/
+.filters {
+	/*background: #232323;*/
+	float: left;
+	width: 400px;
+	border-radius: 10px;
+	margin-left: 25px;
+	color: #fff;
+	font-size: 14px;
+}
+.filters h2 {
+	text-align: center;
+}
+.filters table {
+	margin: 0px 20px 20px 20px;
+}
+.filters .btn {
+	background: #2b64bf;
+	border-radius: 5px;
+	padding: 5px 10px;
+	margin-right: 7px;
+	font-family: 'Roboto', sans-serif;
+	cursor: pointer;
+}
+.filters .btn.active {
+	background: #132f5b;
+}
+.filters input {
+	position: absolute;
+	clip: rect(0,0,0,0);
+}
+.filters tr {
+	height: 2.2em;
+}
+.filters .category {
+	font-style: bold;
+	font-size: 14px;
+	float: right;
+	padding: 8px 5px 0 0;
+}
+
+
+/*copyright things*/
+#copyright {
+	text-align: center;
+	bottom: 0;
+	position: fixed;
+}
+
+#copyright a {
+	color: white;
 }

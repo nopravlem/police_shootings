@@ -15,7 +15,7 @@ var zoom = d3.behavior.zoom()
 var path = d3.geo.path()
     .projection(projection);
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select(".us_country_map").append("svg")
     .attr("width", width)
     .attr("height", height)
     .on("click", stopped, true);
@@ -32,7 +32,7 @@ svg
     .call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
-d3.json("/mbostock/us.json", function(error, us) {
+d3.json("/sample/us.json", function(error, us) {
   if (error) throw error;
 
   g.selectAll("path")
@@ -84,4 +84,103 @@ function zoomed() {
 // also stop propagation so we don’t click-to-zoom.
 function stopped() {
   if (d3.event.defaultPrevented) d3.event.stopPropagation();
+}
+
+//------------------------------------------------------------------------------------------------------------//
+
+
+var sun_width = 430,
+    sun_height = 380,
+    sun_radius = 180;
+
+var color = d3.scale.category20c();
+
+var partition = d3.layout.partition()
+    .size([2 * Math.PI, sun_radius])
+    .value(function(d) { return d.size; });
+
+var arc = d3.svg.arc()
+    .startAngle(function(d) { return d.x; })
+    .endAngle(function(d) { return d.x + d.dx; })
+    .innerRadius(function(d) { return d.y; })
+    .outerRadius(function(d) { return d.y + d.dy; });
+
+var sun_svg = d3.select(".sunburst").append("svg")
+    .attr("width", sun_width)
+    .attr("height", sun_height)
+  .append("g")
+    .attr("transform", "translate(" + sun_width / 2 + "," + sun_height / 2 + ")");
+
+d3.json("/sample/readme.json", function(error, root) {
+  if (error) throw error;
+
+  sun_path = sun_svg.data([root]).selectAll("sun_path")
+      .data(partition.nodes)
+    .enter().append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+      .on("click", magnify)
+      .each(stash);
+});
+
+// Distort the specified node to 80% of its parent.
+function magnify(node) {
+  if (parent = node.parent) {
+    var parent,
+        x = parent.x,
+        k = .8;
+    parent.children.forEach(function(sibling) {
+      x += reposition(sibling, x, sibling === node
+          ? parent.dx * k / node.value
+          : parent.dx * (1 - k) / (parent.value - node.value));
+    });
+  } else {
+    reposition(node, 0, node.dx / node.value);
+  }
+
+  sun_path.transition()
+      .duration(750)
+      .attrTween("d", arcTween);
+}
+
+// Recursively reposition the node at position x with scale k.
+function reposition(node, x, k) {
+  node.x = x;
+  if (node.children && (n = node.children.length)) {
+    var i = -1, n;
+    while (++i < n) x += reposition(node.children[i], x, k);
+  }
+  return node.dx = node.value * k;
+}
+
+// Stash the old values for transition.
+function stash(d) {
+  d.x0 = d.x;
+  d.dx0 = d.dx;
+}
+
+// Interpolate the arcs in data space.
+function arcTween(a) {
+  var i = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+  return function(t) {
+    var b = i(t);
+    a.x0 = b.x;
+    a.dx0 = b.dx;
+    return arc(b);
+  };
+}
+
+
+//------------------------------------------------------------------------------------------------------------//
+
+// checkboxes
+function toggleCheckbox(element) {
+  var check_node = d3.select(element).node();
+  parent_node = check_node.parentNode;
+  
+  if(element.checked) {
+    d3.select(parent_node).classed("active", true);
+  } else {
+    d3.select(parent_node).classed("active", false);
+  }
 }
