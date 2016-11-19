@@ -49,11 +49,27 @@ d3.json("/sample/us.json", function(error, us) {
 });
 
 d3.csv("locations.csv", function(data) {
-svg.selectAll("circle")
-  .data(data)
-  .enter()
-  .append("circle").attr("r",5).attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";});
+  var city_frequency = {};
+  data.forEach(function(d) {
+    d["city-state"] = d.city + ", " + d.state;
+    if (city_frequency[d["city-state"]]) {
+      city_frequency[d["city-state"]] += 1;
+    } else {
+      city_frequency[d["city-state"]] = 1;
+    }
+  });
+  svg.selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("r",function(d) {return map_frequency_to_radius(d["city-state"], city_frequency)})
+    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";});
 });
+
+var map_frequency_to_radius = function(city, frequency) {
+  // console.log(frequency[city])
+  return frequency[city];
+}
 
 // d3.csv("locations.csv", function(data) {
 //   svg.selectAll("circle")
@@ -69,7 +85,7 @@ svg.selectAll("circle")
 //   .attr("r", function(d) {
 //     return 4;
 //   })
-//     .style("fill", "rgb(217,91,67)")  
+//     .style("fill", "rgb(217,91,67)")
 //     .style("opacity", 0.85)
 // });
 
@@ -202,7 +218,7 @@ function arcTween(a) {
 function toggleCheckbox(element) {
   var check_node = d3.select(element).node();
   parent_node = check_node.parentNode;
-  
+
   if(element.checked) {
     d3.select(parent_node).classed("active", true);
   } else {
