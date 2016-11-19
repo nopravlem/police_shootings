@@ -177,7 +177,7 @@ function arcTween(a) {
 function toggleCheckbox(element) {
   var check_node = d3.select(element).node();
   parent_node = check_node.parentNode;
-  
+
   if(element.checked) {
     d3.select(parent_node).classed("active", true);
   } else {
