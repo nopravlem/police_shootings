@@ -48,6 +48,31 @@ d3.json("/sample/us.json", function(error, us) {
       .attr("d", path);
 });
 
+d3.csv("locations.csv", function(data) {
+svg.selectAll("circle")
+  .data(data)
+  .enter()
+  .append("circle").attr("r",5).attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";});
+});
+
+// d3.csv("locations.csv", function(data) {
+//   svg.selectAll("circle")
+//   .data(data)
+//   .enter()
+//   .append("circle")
+//   .attr("cx", function(d) {
+//     return projection([d.longitude, d.latitude])[0];
+//   })
+//   .attr("cy", function(d) {
+//     return projection([d.longitude, d.latitude])[1];
+//   })
+//   .attr("r", function(d) {
+//     return 4;
+//   })
+//     .style("fill", "rgb(217,91,67)")  
+//     .style("opacity", 0.85)
+// });
+
 function clicked(d) {
   if (active.node() === this) return reset();
   active.classed("active", false);
