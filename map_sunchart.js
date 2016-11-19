@@ -66,7 +66,6 @@ d3.csv("locations.csv", function(data) {
   });
 
   gPins.selectAll("circle")
-  svg.selectAll("circle")
     .data(data)
     .enter()
     .append("circle")
