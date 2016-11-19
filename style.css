@@ -1,7 +1,7 @@
 body {
 	background: #333;
 
-	
+
 }
 
 #page_title {
@@ -94,4 +94,9 @@ body {
 
 #copyright a {
 	color: white;
+}
+
+.tooltip {
+	position:absolute;
+	color:magenta;
 }
