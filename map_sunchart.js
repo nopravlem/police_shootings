@@ -12,6 +12,7 @@ var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on("zoom", zoomed);
 
+
 var path = d3.geo.path()
     .projection(projection);
 
@@ -27,9 +28,10 @@ svg.append("rect")
     .on("click", reset);
 
 var g = svg.append("g");
+var gPins = svg.append("g"); // new g element
 
 svg
-    .call(zoom) // delete this line to disable free zooming
+    //.call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
 d3.json("/sample/us.json", function(error, us) {
@@ -47,6 +49,62 @@ d3.json("/sample/us.json", function(error, us) {
       .attr("class", "mesh")
       .attr("d", path);
 });
+
+var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot over itself
+                          //this makes it so that lowering the opacity will allow us to actually
+                          //see what's beneath the dot instead of the same dot
+
+d3.csv("locations.csv", function(data) {
+  var city_frequency = {};
+  data.forEach(function(d) {
+    d["city-state"] = d.city + ", " + d.state;
+    if (city_frequency[d["city-state"]]) {
+      city_frequency[d["city-state"]] += 1;
+    } else {
+      city_frequency[d["city-state"]] = 1;
+    }
+  });
+
+  gPins.selectAll("circle")
+  svg.selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("r",function(d) {
+      if (!already_drawn_dot.has(d["city-state"])) {
+        already_drawn_dot.add(d["city-state"])
+        return map_frequency_to_radius(d["city-state"], city_frequency)
+      } else {
+        return 0;
+      }
+    })
+    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
+    .style("opacity", 0.65);
+});
+
+var map_frequency_to_radius = function(city, frequency) {
+  // console.log(frequency[city])
+
+  return frequency[city];
+}
+
+// d3.csv("locations.csv", function(data) {
+//   svg.selectAll("circle")
+//   .data(data)
+//   .enter()
+//   .append("circle")
+//   .attr("cx", function(d) {
+//     return projection([d.longitude, d.latitude])[0];
+//   })
+//   .attr("cy", function(d) {
+//     return projection([d.longitude, d.latitude])[1];
+//   })
+//   .attr("r", function(d) {
+//     return 4;
+//   })
+//     .style("fill", "rgb(217,91,67)")
+//     .style("opacity", 0.85)
+// });
 
 function clicked(d) {
   if (active.node() === this) return reset();
@@ -78,6 +136,7 @@ function reset() {
 function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
 }
 
 // If the drag behavior prevents the default click,
