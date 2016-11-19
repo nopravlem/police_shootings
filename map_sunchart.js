@@ -12,6 +12,7 @@ var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on("zoom", zoomed);
 
+
 var path = d3.geo.path()
     .projection(projection);
 
@@ -27,9 +28,10 @@ svg.append("rect")
     .on("click", reset);
 
 var g = svg.append("g");
+var gPins = svg.append("g"); // new g element
 
 svg
-    .call(zoom) // delete this line to disable free zooming
+    //.call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
 d3.json("/sample/us.json", function(error, us) {
@@ -58,7 +60,7 @@ d3.csv("locations.csv", function(data) {
       city_frequency[d["city-state"]] = 1;
     }
   });
-  svg.selectAll("circle")
+  gPins.selectAll("circle")
     .data(data)
     .enter()
     .append("circle")
@@ -119,6 +121,7 @@ function reset() {
 function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
 }
 
 // If the drag behavior prevents the default click,
