@@ -21,6 +21,11 @@ var svg = d3.select(".us_country_map").append("svg")
     .attr("height", height)
     .on("click", stopped, true);
 
+var tooltip = d3.select(".us_country_map").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 1)
+
+
 svg.append("rect")
     .attr("class", "background")
     .attr("width", width)
@@ -78,7 +83,24 @@ d3.csv("locations.csv", function(data) {
       }
     })
     .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
-    .style("opacity", 0.65);
+    .style("opacity", 0.65)
+    .on("mouseover", function(d) {
+
+      tooltip.transition()
+      .duration(200)
+      .style("opacity", 75);
+
+      //fill the tooltip with the appropriate data
+      tooltip.html("<strong>" + d["city-state"] + "</strong>")
+      .style("left", (d3.event.pageX + 2) + "px")
+      .style("top", (d3.event.pageY + 2) + "px");
+      // console.log(d3.event.pageX)
+    })
+    .on("mouseout", function(d) {
+      tooltip.transition()
+      .duration(200)
+      .style("opacity", 0);
+    });
 });
 
 var map_frequency_to_radius = function(city, frequency) {
