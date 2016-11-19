@@ -48,6 +48,10 @@ d3.json("/sample/us.json", function(error, us) {
       .attr("d", path);
 });
 
+var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot over itself
+                          //this makes it so that lowering the opacity will allow us to actually
+                          //see what's beneath the dot instead of the same dot
+
 d3.csv("locations.csv", function(data) {
   var city_frequency = {};
   data.forEach(function(d) {
@@ -58,16 +62,26 @@ d3.csv("locations.csv", function(data) {
       city_frequency[d["city-state"]] = 1;
     }
   });
+
   svg.selectAll("circle")
     .data(data)
     .enter()
     .append("circle")
-    .attr("r",function(d) {return map_frequency_to_radius(d["city-state"], city_frequency)})
-    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";});
+    .attr("r",function(d) {
+      if (!already_drawn_dot.has(d["city-state"])) {
+        already_drawn_dot.add(d["city-state"])
+        return map_frequency_to_radius(d["city-state"], city_frequency)
+      } else {
+        return 0;
+      }
+    })
+    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
+    .style("opacity", 0.65);
 });
 
 var map_frequency_to_radius = function(city, frequency) {
   // console.log(frequency[city])
+
   return frequency[city];
 }
 
