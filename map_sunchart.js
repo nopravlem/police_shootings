@@ -22,8 +22,10 @@ var svg = d3.select(".us_country_map").append("svg")
     .on("click", stopped, true);
 
 var tooltip = d3.select(".us_country_map").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 1)
+        // .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("color", "magenta")
+        .style("opacity", 0)
 
 
 svg.append("rect")

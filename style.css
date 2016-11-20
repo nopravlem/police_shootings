@@ -1,7 +1,6 @@
 body {
 	background: #333;
 
-
 }
 
 #page_title {
@@ -97,6 +96,6 @@ body {
 }
 
 .tooltip {
-	position:absolute;
-	color:magenta;
+	/*position: absolute;*/
+	color: magenta;
 }
