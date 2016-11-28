@@ -1,3 +1,4 @@
+let globaldata = [];
 var view_country = true;
 var modified_data = [];
 var city_frequency = {};
@@ -49,7 +50,7 @@ d3.json("/sample/us.json", function(error, us) {
   if (error) throw error;
 
   g.selectAll("path")
-      .data(topojson.feature(us, us.objects.counties).features)
+      .data(topojson.feature(us, us.objects.states).features)
     .enter().append("path")
       .attr("d", path)
       .attr("class", "feature")
@@ -66,6 +67,7 @@ var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot 
                           //see what's beneath the dot instead of the same dot
 
 d3.csv("locations.csv", function(data) {
+
   data.forEach(function(d) {
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
@@ -152,7 +154,7 @@ function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
-  gPins.selectAll("circle").attr("r", () => 2 / d3.event.scale)
+  gPins.selectAll("circle").attr("r", () => 2 / d3.event.scale);
 }
 
 // If the drag behavior prevents the default click,
@@ -162,7 +164,6 @@ function stopped() {
 }
 
 //------------------------------------------------------------------------------------------------------------//
-
 
 var sun_width = 430,
     sun_height = 380,
