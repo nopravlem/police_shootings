@@ -1,3 +1,8 @@
+let globaldata = [];
+var view_country = true;
+var modified_data = [];
+var city_frequency = {};
+
 var width = 780,
     height = 500,
     active = d3.select(null);
@@ -24,7 +29,7 @@ var svg = d3.select(".us_country_map").append("svg")
 var tooltip = d3.select(".us_country_map").append("div")
         // .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("color", "magenta")
+        .style("color", "black")
         .style("opacity", 0)
 
 
@@ -62,7 +67,6 @@ var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot 
                           //see what's beneath the dot instead of the same dot
 
 d3.csv("locations.csv", function(data) {
-  var city_frequency = {};
   data.forEach(function(d) {
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
@@ -70,8 +74,13 @@ d3.csv("locations.csv", function(data) {
     } else {
       city_frequency[d["city-state"]] = 1;
     }
+    modified_data.push(d);
   });
+  draw_circles(modified_data, city_frequency);
+});
 
+const draw_circles = (data, city_frequency) => {
+  already_drawn_dot = new Set();
   gPins.selectAll("circle")
     .data(data)
     .enter()
@@ -87,47 +96,26 @@ d3.csv("locations.csv", function(data) {
     .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .on("mouseover", function(d) {
-
       tooltip.transition()
-      .duration(200)
+      .duration(400)
       .style("opacity", 75);
-
+      d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
-      tooltip.html("<strong>" + d["city-state"] + "</strong>")
-      .style("left", (d3.event.pageX + 2) + "px")
-      .style("top", (d3.event.pageY + 2) + "px");
-      // console.log(d3.event.pageX)
+      tooltip.html("<strong>" + d["city-state"] + "</strong><br/>"
+                  +"<strong>" + city_frequency[d["city-state"]] + "</strong>")
+      .style("left", (d3.event.pageX + 5) + "px")
+      .style("top", (d3.event.pageY + 3) + "px");
     })
     .on("mouseout", function(d) {
       tooltip.transition()
-      .duration(200)
+      .duration(400)
       .style("opacity", 0);
     });
-});
-
-var map_frequency_to_radius = function(city, frequency) {
-  // console.log(frequency[city])
-
-  return frequency[city];
 }
 
-// d3.csv("locations.csv", function(data) {
-//   svg.selectAll("circle")
-//   .data(data)
-//   .enter()
-//   .append("circle")
-//   .attr("cx", function(d) {
-//     return projection([d.longitude, d.latitude])[0];
-//   })
-//   .attr("cy", function(d) {
-//     return projection([d.longitude, d.latitude])[1];
-//   })
-//   .attr("r", function(d) {
-//     return 4;
-//   })
-//     .style("fill", "rgb(217,91,67)")
-//     .style("opacity", 0.85)
-// });
+var map_frequency_to_radius = function(city, frequency) {
+  return view_country ? frequency[city] : 1
+}
 
 function clicked(d) {
   if (active.node() === this) return reset();
@@ -145,6 +133,9 @@ function clicked(d) {
   svg.transition()
       .duration(750)
       .call(zoom.translate(translate).scale(scale).event);
+
+  view_country = !view_country;
+  draw_circles(modified_data, city_frequency)
 }
 
 function reset() {
@@ -160,6 +151,7 @@ function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
+  gPins.selectAll("circle").attr("r", () => 2 / d3.event.scale);
 }
 
 // If the drag behavior prevents the default click,
@@ -169,7 +161,6 @@ function stopped() {
 }
 
 //------------------------------------------------------------------------------------------------------------//
-
 
 var sun_width = 430,
     sun_height = 380,

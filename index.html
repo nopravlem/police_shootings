@@ -5,6 +5,25 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:300" rel="stylesheet">
     <link href='style.css' rel='stylesheet' type='text/css'>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 12,
+      max: 86,
+      values: [ 12,  86],
+      slide: function( event, ui ) {
+        console.log("$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] )
+        $( "#age" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      }
+    });
+    $( "#age" ).html( $( "#slider-range" ).slider( "values", 0 ) +
+      " - " + $( "#slider-range" ).slider( "values", 1 ) );
+  } );
+  </script>
   </head>
 
   <body>
@@ -38,6 +57,17 @@
             </td>
           </tr>
           <tr>
+            <td class="category">Age:</td>
+            <td id="filters-gender">
+              <div id="age">
+                <!-- <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" value="hello"> -->
+              </div>
+            </td>
+          <tr>
+          </tr>
+            <td></td>
+            <td><div id="slider-range"></div></td>
+          </tr>
             <td class="category">Body Cam:</td>
             <td id="filters-bodycam">
               <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Yes">Yes</label>
