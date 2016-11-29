@@ -67,8 +67,6 @@ var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot 
                           //see what's beneath the dot instead of the same dot
 
 d3.csv("locations.csv", function(data) {
-  let min = data[0].age;
-  let max = data[0].age;
   data.forEach(function(d) {
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
