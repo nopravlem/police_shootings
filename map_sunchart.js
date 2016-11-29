@@ -29,7 +29,7 @@ var svg = d3.select(".us_country_map").append("svg")
 var tooltip = d3.select(".us_country_map").append("div")
         // .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("color", "magenta")
+        .style("color", "black")
         .style("opacity", 0)
 
 
@@ -101,9 +101,10 @@ const draw_circles = (data, city_frequency) => {
       .style("opacity", 75);
       d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
-      tooltip.html("<strong>" + d["city-state"] + "</strong>")
-      .style("left", (d3.event.pageX + 2) + "px")
-      .style("top", (d3.event.pageY + 2) + "px");
+      tooltip.html("<strong>" + d["city-state"] + "</strong><br/>"
+                  +"<strong>" + city_frequency[d["city-state"]] + "</strong>")
+      .style("left", (d3.event.pageX + 5) + "px")
+      .style("top", (d3.event.pageY + 3) + "px");
     })
     .on("mouseout", function(d) {
       tooltip.transition()
