@@ -70,8 +70,6 @@ d3.csv("locations.csv", function(data) {
   let min = data[0].age;
   let max = data[0].age;
   data.forEach(function(d) {
-    if (d.age < min) min = d.age;
-    if (+d.age > max) max = d.age;
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
       city_frequency[d["city-state"]] += 1;
@@ -81,7 +79,6 @@ d3.csv("locations.csv", function(data) {
     modified_data.push(d);
   });
   draw_circles(modified_data, city_frequency);
-  console.log([min, max])
 });
 
 const draw_circles = (data, city_frequency) => {
