@@ -14,14 +14,14 @@
     function init() {
       // initialize controller variables
       ctrl.examples = [
-        "demographics",
+        "data/demographics",
         "data_netflix_churn",
         "data_page_clicks"
       ];
       ctrl.exampleSelected = ctrl.examples[0];
       ctrl.getData = getData;
       ctrl.selectExample = selectExample;
-      
+
       // initialize controller functions
       ctrl.selectExample(ctrl.exampleSelected);
     }
@@ -43,13 +43,12 @@
 
   // directive function sunburst
   function sunburst() {
-    return {
-      restrict: "E",
-      scope: {
-        data: "=",
-      },
-      link: sunburstDraw
-    };
+      return {
+        restrict: "E",
+        scope: {data: "=",},
+        link: sunburstDraw
+      };
+
   }
 
 

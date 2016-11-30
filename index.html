@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Sunburst">
+
   <head>
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:300" rel="stylesheet">
@@ -8,22 +9,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-  $( function() {
-    $( "#slider-range" ).slider({
-      range: true,
-      min: 12,
-      max: 86,
-      values: [ 12,  86],
-      slide: function( event, ui ) {
-        console.log("$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] )
-        $( "#age" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-      }
-    });
-    $( "#age" ).html( $( "#slider-range" ).slider( "values", 0 ) +
-      " - " + $( "#slider-range" ).slider( "values", 1 ) );
-  } );
-  </script>
+
   </head>
 
   <body>
@@ -35,9 +21,12 @@
     <script src="d3/d3-tip-v0.6.7.js" charset="utf-8"></script> -->
     <div class="wrap">
       <div class="us_country_map"></div>
-      <div class="sunburst"></div>
+      <div class="sunburst" ng-controller="MainCtrl as sunburst">
+        <div class="visualization">
+          <sunburst data="sunburst.data"></sunburst>
+        </div>
+      </div>
       <div class="filters">
-        <h2>Filters</h2>
         <table>
           <tr>
             <td class="category">Race:</td>
@@ -53,21 +42,22 @@
             <td id="filters-gender">
               <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="Male">Male</label>
               <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="Female">Female</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="Other">Other</label>
             </td>
           </tr>
-          <tr>
+          <tr id="age_filter">
             <td class="category">Age:</td>
             <td id="filters-gender">
               <div id="age">
-                <!-- <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" value="hello"> -->
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Youth">Youth</label>
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Twenties">Twenties</label>
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Thirties">Thirties</label>
+              </br></br>
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Forties">Forties</label>
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Fifties">Fifties</label>
+              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Elderly">Elderly</label>
               </div>
             </td>
           <tr>
-          </tr>
-            <td></td>
-            <td><div id="slider-range"></div></td>
-          </tr>
             <td class="category">Body Cam:</td>
             <td id="filters-bodycam">
               <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="bodycam" value="Yes">Yes</label>
@@ -87,9 +77,13 @@
 
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="//d3js.org/topojson.v1.min.js"></script>
-
-    <!-- Our js files -->
+    <script src="http://code.angularjs.org/1.3.5/angular.js"></script>
+    <script src="app.js"></script>
     <script src="map_sunchart.js"></script>
+    <script>
+      // Hack to make this example display correctly in an iframe on bl.ocks.org
+      d3.select(self.frameElement).style("height", "1000px");
+    </script>
 
     </br></br></br></br></br></br>
     <p id="copyright" style="font-size:11px;color:white;">Used <a href="http://bl.ocks.org/mbostock">Mike Bostock’s Blocks</a> for Templates</p>

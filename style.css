@@ -45,6 +45,7 @@ body {
 /*filter*/
 .filters {
 	/*background: #232323;*/
+	margin-top: 390px;
 	float: left;
 	width: 400px;
 	border-radius: 10px;
