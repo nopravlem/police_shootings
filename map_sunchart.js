@@ -249,7 +249,6 @@ function sunburstDraw(scope, element) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
   // create and position legend
   var legend = vis
     .append("div").classed("legend-container", true)
@@ -267,6 +266,7 @@ function sunburstDraw(scope, element) {
     .append("div").classed("breadcrumbs-container", true)
     .style("position", "absolute")
     .style("top", sunburstMargin.top - 350 + "px")
+    .style("left", 20 + "px")
     .append("svg")
     .attr("width", width)
     .attr("height", b.h)
@@ -277,17 +277,19 @@ function sunburstDraw(scope, element) {
   var lastCrumb = breadcrumbs
     .append("text").classed("lastCrumb", true);
 
+  drawBreadcrumbTemplate();
+
   // create and position summary container
   var summary = vis
     .append("div").classed("summary-container", true)
     .style("position", "absolute")
-    .style("top", (radius * 0.80  + 40) + "px")
-    .style("left", sunburstMargin.left + radius / 2 + "px")
+    .style("top", (radius * 0.80  + 50) + "px")
+    .style("left", sunburstMargin.left + radius / 2 + 5 + "px")
     .style("width", radius + "px")
     .style("height", radius + "px")
     .style("text-align", "center")
     .style("font-size", "11px")
-    .style("color", "#666")
+    .style("color", "#fff")
     .style("z-index", "-1");
 
   /**
@@ -316,12 +318,61 @@ function sunburstDraw(scope, element) {
    * @function getAncestors(node): get ancestors of a specified node
    * @function buildHierarchy(data): generate json nested structure from csv data input
    */
+  //draws breadcrumb templates
+  function drawBreadcrumbTemplate() {
+    var bc = 0;
+    while (bc < 4) {
+      temp_breadcrumb = breadcrumbs.append("g");
+
+      if (bc > 0) {
+        temp_breadcrumb
+          .append("polygon").classed("breadcrumbs-shape", true)
+          .attr("points", templatebreadCPoints)
+          .attr("fill", "#d2d7dd");
+
+      } else {
+        temp_breadcrumb
+          .append("polygon").classed("breadcrumbs-shape", true)
+          .attr("points", breadcrumbPoints)
+          .attr("fill", "#d2d7dd");
+      }
+
+
+      temp_breadcrumb
+        .append("text").classed("breadcrumbs-text", true)
+        .attr("x", (b.w + b.t) / 2)
+        .attr("y", b.h / 2)
+        .attr("dy", "0.35em")
+        .attr("font-size", "10px")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text(function() {
+          if (bc === 0) { return "gender"; }
+          if (bc === 1) { return "race"; }
+          if (bc === 2) { return "age"; }
+          return "body cam"
+        });
+
+      temp_breadcrumb.attr("transform", "translate(" + 63 * bc + ",0)");
+
+      bc++
+    }
+
+    lastCrumb
+      .attr("x", 4.6 * (b.w + b.s))
+      .attr("y", b.h / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .attr("font-weight", 600)
+      .text("Hover");
+  }
+
+
   // removes existing SVG components
   function removeVisualization() {
     sunburst.selectAll(".nodePath").remove();
     legend.selectAll("g").remove();
   }
-
 
   // visualize json tree structure
   function createVisualization(json) {
@@ -401,9 +452,8 @@ function sunburstDraw(scope, element) {
 
     // update summary
     summary.html(
-      "Stage: " + d.depth + "<br />" +
-      "<span class='percentage'>" + percentageString + "</span><br />" +
-      d.value + " of " + totalSize + "<br />"
+      "<span class='percentage'>" + percentageString + "</span><br />"
+      // d.value + " of " + totalSize + "<br />"
     );
 
     // display summary and breadcrumbs if hidden
@@ -424,9 +474,17 @@ function sunburstDraw(scope, element) {
         d3.select(this).on("mouseover", mouseover);
       });
 
+    //TODO: collect all the breadcrumbs to link to filters
+    //apply breadcrumbs to filters
+    //do not remove data
+    //remove data only when more checkboxes are click
+
     // hide summary and breadcrumbs if visible
-    breadcrumbs.style("visibility", "hidden");
+    breadcrumbs.selectAll(".newData").remove();
     summary.style("visibility", "hidden");
+
+    //redraw template
+    drawBreadcrumbTemplate();
   }
 
 
@@ -440,6 +498,19 @@ function sunburstDraw(scope, element) {
       current = current.parent;
     }
     return path;
+  }
+
+  // Generate a string representation for drawing a breadcrumb polygon.
+  function templatebreadCPoints(d) {
+    var points = [];
+    points.push("0,0");
+    points.push(b.w + ",0");
+    points.push(b.w + b.t + "," + (b.h / 2));
+    points.push(b.w + "," + b.h);
+    points.push("0," + b.h);
+    points.push(b.t + "," + (b.h / 2));
+    points.push(b.t + "," + (b.h / 2));
+    return points.join(" ");
   }
 
 
@@ -462,13 +533,14 @@ function sunburstDraw(scope, element) {
   // Update the breadcrumb breadcrumbs to show the current sequence and percentage.
   function updateBreadcrumbs(ancestors, percentageString) {
     // Data join, where primary key = name + depth.
-    var g = breadcrumbs.selectAll("g")
+    var g = breadcrumbs.selectAll(".newData")
       .data(ancestors, function(d) {
         return d.name + d.depth;
       });
 
     // Add breadcrumb and label for entering nodes.
-    var breadcrumb = g.enter().append("g");
+    var breadcrumb = g.enter().append("g").attr("class", "newData");;
+    console.log(g.enter());
 
     breadcrumb
       .append("polygon").classed("breadcrumbs-shape", true)
@@ -487,22 +559,24 @@ function sunburstDraw(scope, element) {
       });
 
     // Set position for entering and updating nodes.
+    // console.log((i * (b.w + b.s) + ""));
     g.attr("transform", function(d, i) {
+      console.log(i);
       return "translate(" + i * (b.w + b.s) + ", 0)";
     });
 
     // Remove exiting nodes.
     g.exit().remove();
+    //redraw the template
 
-    // Update percentage at the lastCrumb.
-    lastCrumb
-      .attr("x", (ancestors.length + 0.5) * (b.w + b.s))
-      .attr("y", b.h / 2)
-      .attr("dy", "0.35em")
-      .attr("text-anchor", "middle")
-      .attr("fill", "black")
-      .attr("font-weight", 600)
-      .text(percentageString);
+    // // Update percentage at the lastCrumb.
+    // lastCrumb
+    //   .attr("x", 4.6 * (b.w + b.s))
+    //   .attr("y", b.h / 2)
+    //   .attr("dy", "0.35em")
+    //   .attr("text-anchor", "middle")
+    //   .attr("font-weight", 600)
+    //   .text(percentageString);
   }
 
 
