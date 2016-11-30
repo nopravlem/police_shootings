@@ -275,7 +275,7 @@ function sunburstDraw(scope, element) {
 
   // create last breadcrumb element
   var lastCrumb = breadcrumbs
-    .append("text").classed("lastCrumb", true);
+    .append("text").classe("lastCrumb", true);
 
   drawBreadcrumbTemplate();
 
