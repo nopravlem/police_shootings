@@ -180,14 +180,6 @@ function sunburstDraw(scope, element) {
     t: 10
   };
 
-  // Legend dimensions: width, height, spacing, radius of rounded rect.
-  var li = {
-    w: 75,
-    h: 30,
-    s: 3,
-    r: 3
-  };
-
   // margins
   var margin = {
     top: radius,
@@ -249,18 +241,6 @@ function sunburstDraw(scope, element) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // create and position legend
-  var legend = vis
-    .append("div").classed("legend-container", true)
-    .style("position", "absolute")
-    .style("top", b.h + "px")
-    .style("left", 2 * radius + sunburstMargin.right + "px")
-    .style("width", 50 + "px")
-    .style("height", 50 + "px")
-    .append("svg")
-    .attr("width", li.w)
-    .attr("height", height);
-
   // create and position breadcrumbs container and svg
   var breadcrumbs = vis
     .append("div").classed("breadcrumbs-container", true)
@@ -310,6 +290,7 @@ function sunburstDraw(scope, element) {
   /**
    * Helper functions:
    *
+   * @function drawBreadcrumbTemplate(): draws the breadcrumb template
    * @function removeVisualization(): removes existing SVG components
    * @function createVisualization(json): create visualization from json tree structure
    * @function colorMap(d): color nodes with colors mapping
@@ -328,13 +309,15 @@ function sunburstDraw(scope, element) {
         temp_breadcrumb
           .append("polygon").classed("breadcrumbs-shape", true)
           .attr("points", templatebreadCPoints)
-          .attr("fill", "#d2d7dd");
+          .attr("fill", "#fff")
+          .attr("opacity", 0.8);
 
       } else {
         temp_breadcrumb
           .append("polygon").classed("breadcrumbs-shape", true)
           .attr("points", breadcrumbPoints)
-          .attr("fill", "#d2d7dd");
+          .attr("fill", "#fff")
+          .attr("opacity", 0.8);
       }
 
 
@@ -371,13 +354,11 @@ function sunburstDraw(scope, element) {
   // removes existing SVG components
   function removeVisualization() {
     sunburst.selectAll(".nodePath").remove();
-    legend.selectAll("g").remove();
   }
 
   // visualize json tree structure
   function createVisualization(json) {
     drawSunburst(json); // draw sunburst
-    drawLegend(); // draw legend
   };
 
 
@@ -540,7 +521,6 @@ function sunburstDraw(scope, element) {
 
     // Add breadcrumb and label for entering nodes.
     var breadcrumb = g.enter().append("g").attr("class", "newData");;
-    console.log(g.enter());
 
     breadcrumb
       .append("polygon").classed("breadcrumbs-shape", true)
@@ -561,7 +541,6 @@ function sunburstDraw(scope, element) {
     // Set position for entering and updating nodes.
     // console.log((i * (b.w + b.s) + ""));
     g.attr("transform", function(d, i) {
-      console.log(i);
       return "translate(" + i * (b.w + b.s) + ", 0)";
     });
 
