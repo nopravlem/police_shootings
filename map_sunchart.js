@@ -114,7 +114,7 @@ const draw_circles = (data, city_frequency) => {
 }
 
 var map_frequency_to_radius = function(city, frequency) {
-  return view_country ? frequency[city] : 1
+  return 5 * Math.sqrt(frequency[city]/Math.PI)
 }
 
 function clicked(d) {
