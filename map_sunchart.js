@@ -104,17 +104,19 @@ const draw_circles = (data, city_frequency) => {
       tooltip.html("<strong>" + d["city-state"] + "</strong><br/>"
                   +"<strong>" + city_frequency[d["city-state"]] + "</strong>")
       .style("left", (d3.event.pageX + 5) + "px")
-      .style("top", (d3.event.pageY + 3) + "px");
+      .style("top", (d3.event.pageY + 3) + "px")
+      .style("z-index", 0);
     })
     .on("mouseout", function(d) {
       tooltip.transition()
       .duration(400)
-      .style("opacity", 0);
+      .style("opacity", 0)
+      .style("z-index", -1);
     });
 }
 
 var map_frequency_to_radius = function(city, frequency) {
-  return view_country ? frequency[city] : 1
+  return Math.sqrt(10 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -151,7 +153,7 @@ function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
-  gPins.selectAll("circle").attr("r", () => 2 / d3.event.scale);
+  gPins.selectAll("circle").attr("r", () => 5 / d3.event.scale);
 }
 
 // If the drag behavior prevents the default click,
