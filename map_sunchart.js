@@ -33,8 +33,15 @@ var tooltip = d3.select(".us_country_map").append("div")
         .style("background", "white")
         .style("border", "0px")
         .style("border-radius", "8px")
+        .style("font-family", "Sans-serif")
         .style("opacity", 0)
 
+var deets_on_demand = d3.select(".us_country_map").append("div")
+          .style("position", "absolute")
+          .style("background", "white")
+          .style("color", "#783eff")
+          .style("border", "2px")
+          .style("border-radius", "10px");
 
 svg.append("rect")
     .attr("class", "background")
@@ -115,6 +122,15 @@ const draw_circles = (data, city_frequency) => {
       .duration(400)
       .style("opacity", 0)
       .style("z-index", -1);
+    })
+    .on("click", (d) => {
+      tooltip.transition()
+      .style("opacity", 0)
+      .style("z-index", -1);
+
+      deets_on_demand.html("<strong>DEETS ON DEMAND</strong>")
+      .style("left", (d3.event.pageX + 5) + "px")
+      .style("top", (d3.event.pageY + 3) + "px")
     });
 }
 
