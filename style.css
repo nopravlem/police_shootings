@@ -41,6 +41,10 @@ body {
 .sunburst {
 	float: left;
 }
+.percentage {
+	font-size: 24px;
+	font-weight: bolder;
+}
 
 /*filter*/
 .filters {
