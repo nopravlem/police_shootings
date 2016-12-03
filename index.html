@@ -31,47 +31,38 @@
           <tr>
             <td class="category">Race:</td>
             <td id="filters-race">
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Asian">Asian</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Black">Black</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Hispanic">Hispanic</label>
-              </br></br>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="NativeAmerican">Native</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Other">Other</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="race" value="White">White</label>
+              <label class="btn"><input class="checkbox" id="Asian_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Asian">Asian</label>
+              <label class="btn"><input class="checkbox" id="Black_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Black">Black</label>
+              <label class="btn"><input class="checkbox" id="Hispanic_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Hispanic">Hispanic</label>
+              <label class="btn"><input class="checkbox" id="NativeAmerican_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="NativeAmerican">Native</label>
+              <label class="btn"><input class="checkbox" id="Other_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Other">Other</label>
+              <label class="btn"><input class="checkbox" id="White_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="White">White</label>
             </td>
           </tr>
           <tr>
             <td class="category">Gender:</td>
             <td id="filters-gender">
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="M">Male</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="F">Female</label>
+              <label class="btn"><input class="checkbox" id="Male_id" onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="Male">Male</label>
+              <label class="btn"><input class="checkbox" id="Female_id" onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="Female">Female</label>
             </td>
           </tr>
           <tr id="age_filter">
             <td class="category">Age:</td>
             <td id="filters-gender">
               <div id="age">
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Youth">Youth</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Twenties">Twenties</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Thirties">Thirties</label>
-              </br></br>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Forties">Forties</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Fifties">Fifties</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Elderly">Elderly</label>
+              <label class="btn"><input class="checkbox" id="Youth_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Youth">Youth</label>
+              <label class="btn"><input class="checkbox" id="Twenties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Twenties">Twenties</label>
+              <label class="btn"><input class="checkbox" id="Thirties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Thirties">Thirties</label>
+              <label class="btn"><input class="checkbox" id="Forties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Forties">Forties</label>
+              <label class="btn"><input class="checkbox" id="Fifties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Fifties">Fifties</label>
+              <label class="btn"><input class="checkbox" id="Elderly_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Elderly">Elderly</label>
               </div>
             </td>
           <tr>
             <td class="category">Body Cam:</td>
             <td id="filters-bodycam">
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="Yes">Yes</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="No">No</label>
-            </td>
-          </tr>
-          <tr>
-            <td class="category">Fleeing:</td>
-            <td id="filters-fleeing">
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="fleeing" value="Yes">Yes</label>
-              <label class="btn"><input onclick="toggleCheckbox(this)" type="checkbox" name="fleeing" value="No">No</label>
+              <label class="btn"><input class="checkbox" id="BodyCam_id" onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="BodyCam">Yes</label>
+              <label class="btn"><input class="checkbox" id="NoBodyCam_id" onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="NoBodyCam">No</label>
             </td>
           </tr>
         </table>

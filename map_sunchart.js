@@ -163,8 +163,13 @@ function stopped() {
 }
 
 //------------------------------------------------------------------------------------------------------------//
+var gl_scope = null;
+var gl_element = null;
 
 function sunburstDraw(scope, element) {
+  gl_scope = scope;
+  gl_element = element;
+
   scope.$watch("data", function() {
     var data = scope.data;
     render(data);
@@ -447,7 +452,9 @@ function sunburstDraw(scope, element) {
 
   // helper function click to handle mouseleave events/animations
   function click(d) {
-    // Deactivate all segments then retransition each segment to full opacity.
+
+    //after clicked on, keep normal. When mouse scrolls away from chart, then reset?
+
     sunburst.selectAll("path").on("mouseover", null);
     sunburst.selectAll("path")
       .transition()
@@ -457,10 +464,17 @@ function sunburstDraw(scope, element) {
         d3.select(this).on("mouseover", mouseover);
       });
 
-    //TODO: collect all the breadcrumbs to link to filters
-    //apply breadcrumbs to filters
-    //do not remove data
-    //remove data only when more checkboxes are click
+    var checkboxes = breadcrumbs.selectAll(".newData")[0];
+    var num_factors = checkboxes.length;
+
+    uncheckAll();
+
+    while (num_factors > 0) {
+      var factor = checkboxes[num_factors - 1].textContent.trim() + "_id";
+      document.getElementById(factor).checked = true;
+      toggleCheckbox(document.getElementById(factor));
+      num_factors--;
+    }
 
     // hide summary and breadcrumbs if visible
     breadcrumbs.selectAll(".newData").remove();
@@ -469,7 +483,6 @@ function sunburstDraw(scope, element) {
     //redraw template
     drawBreadcrumbTemplate();
   }
-
 
   // Return array of ancestors of nodes, highest first, but excluding the root.
   function getAncestors(node) {
@@ -655,11 +668,45 @@ function sunburstDraw(scope, element) {
 // checkboxes
 function toggleCheckbox(element) {
   var check_node = d3.select(element).node();
-  parent_node = check_node.parentNode;
+  var parent_node = check_node.parentNode;
+
+  checkDuplicate(parent_node);
 
   if(element.checked) {
     d3.select(parent_node).classed("active", true);
   } else {
     d3.select(parent_node).classed("active", false);
+  }
+}
+
+function checkDuplicate(parent) {
+  var category = parent.parentNode;
+  var checks = category.getElementsByClassName("checkbox");
+  var restart_sunburst = false;
+  var already_checked = false;
+
+  for (element_id in checks) {
+    try {
+      var ele = document.getElementById(element_id).checked;
+      if (ele) { if (already_checked) {
+          restartSunburst();
+        } else {
+          already_checked = true;
+        }
+      }
+    } catch (e) {}
+  }
+}
+
+
+function uncheckAll() {
+  var filters = document.getElementsByClassName("checkbox");
+
+  for (element_id in filters) {
+    try {
+      var element = document.getElementById(element_id);
+      element.checked = false;
+      toggleCheckbox(element);
+    } catch (e) {}
   }
 }
