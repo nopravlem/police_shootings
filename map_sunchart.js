@@ -63,7 +63,7 @@ svg
     //.call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
-d3.json("/sample/us.json", function(error, us) {
+d3.json("/stateMap/us.json", function(error, us) {
   if (error) throw error;
 
   g.selectAll("path")
@@ -83,7 +83,7 @@ var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot 
                           //this makes it so that lowering the opacity will allow us to actually
                           //see what's beneath the dot instead of the same dot
 
-d3.csv("locations.csv", function(data) {
+d3.csv("data/locations.csv", function(data) {
   data.forEach(function(d) {
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
@@ -100,7 +100,18 @@ const get_data_by_city = (city) => {
   let city_data = [];
   modified_data.forEach((d) => {
     if (d["city-state"] === city) {
-      city_data.push(d);
+      for (var field in d) {
+       if (d[field] === "NULL" || d[field] === "TK TK") {
+          d[field] = "Unknown"
+       }
+       if (d[field] === "TRUE") {
+           d[field] = "YES";
+       }
+       if (d[field] === "FALSE") {
+           d[field] = "NO"
+       }
+     }
+    city_data.push(d);
     }
   });
   return city_data;
@@ -118,7 +129,7 @@ function update() {
   city_frequency = {};
   gPins.selectAll("circle").remove();
 
-    d3.csv("locations.csv", function(data) {
+    d3.csv("data/locations.csv", function(data) {
 
       data.forEach(function(d) {
         for(i = 0; i < filters.length; i++ ) {
@@ -167,6 +178,11 @@ function update() {
               var age = +d["age"];
               if(age >= 60) {
                 ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "NULL" && filters[i].checked == true) {
+              if(filters[i].value == d[filters[i].name]) {
+                ageFiltered_data.add(d);
+                console.log(ageFiltered_data.size);
               }
             }
           }
@@ -616,7 +632,8 @@ function sunburstDraw(scope, element) {
       .filter(function(node) {
         return (ancestors.indexOf(node) >= 0);
       })
-      .attr("opacity", 1);
+      .attr("opacity", 1)
+      .style("cursor", "pointer");
 
     // update summary
     summary.html(
