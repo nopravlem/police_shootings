@@ -625,7 +625,8 @@ function sunburstDraw(scope, element) {
       .filter(function(node) {
         return (ancestors.indexOf(node) >= 0);
       })
-      .attr("opacity", 1);
+      .attr("opacity", 1)
+      .style("cursor", "pointer");
 
     // update summary
     summary.html(
