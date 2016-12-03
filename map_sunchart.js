@@ -117,10 +117,12 @@ const draw_circles = (data, city_frequency) => {
     })
     .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
+    .style("stroke", "white")
+    .style("stroke-width", "0.5")
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
-      .style("opacity", 75);
+      .style("opacity", 0.75);
       d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
       tooltip.html("<strong>City: " + d["city-state"] + "</strong><br/>"
@@ -184,7 +186,7 @@ const draw_circles = (data, city_frequency) => {
 
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(10 * frequency[city]/Math.PI)
+  return Math.sqrt(20 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -218,10 +220,21 @@ function reset() {
 }
 
 function zoomed() {
+  already_drawn_dot = new Set();
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
-  gPins.selectAll("circle").attr("r", () => 5 / d3.event.scale);
+  // gPins.selectAll("circle").forEach((d) => console.log(d))
+  gPins.selectAll("circle").attr("r", (d) => {
+    if (!already_drawn_dot.has(d["city-state"])) {
+      already_drawn_dot.add(d["city-state"])
+      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale
+    } else {
+      return 0;
+    }
+ }).style("opacity", 0.65)
+  .style("stroke", "white")
+  .style("stroke-width", "0.5");
   closeDeetsOnDemand();
 }
 
