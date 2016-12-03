@@ -1,10 +1,14 @@
 body {
-	background: #333;
+	background: #bedfff;
 
 }
 
+.category {
+		color: #783eff;
+}
+
 #page_title {
-	color: #fff;
+	color: #783eff;
 	font-size: 35px;
 	text-align: center;
 	margin: 15px 0;
@@ -17,12 +21,12 @@ body {
 }
 
 .background {
-  fill: #232323;
+	fill: #bedfff;
   pointer-events: all;
 }
 
 .feature {
-  fill: #bae4f4;
+  fill: #767980;
   cursor: pointer;
 }
 
@@ -32,7 +36,7 @@ body {
 
 .mesh {
   fill: none;
-  stroke: #fff;
+  stroke: #616266;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
