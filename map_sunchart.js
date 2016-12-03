@@ -106,7 +106,7 @@ const get_data_by_city = (city) => {
   return city_data;
 }
 //method to update map based on user selected filters
-function update() { 
+function update() {
   raceFiltered_data = new Set();
   genFiltered_data = new Set();
   camFiltered_data = new Set();
@@ -646,13 +646,15 @@ function sunburstDraw(scope, element) {
     var num_factors = checkboxes.length;
 
     uncheckAll();
-
     while (num_factors > 0) {
+      console.log("ask toggle")
       var factor = checkboxes[num_factors - 1].textContent.trim() + "_id";
       document.getElementById(factor).checked = true;
-      toggleCheckbox(document.getElementById(factor));
+      sunburstToggle(document.getElementById(factor));
       num_factors--;
     }
+
+  update();
 
     // hide summary and breadcrumbs if visible
     breadcrumbs.selectAll(".newData").remove();
@@ -848,44 +850,54 @@ function toggleCheckbox(element) {
   var check_node = d3.select(element).node();
   var parent_node = check_node.parentNode;
 
-  checkDuplicate(parent_node);
+  if(element.checked) {
+    d3.select(parent_node).classed("active", true);
+  } else {
+    d3.select(parent_node).classed("active", false);
+  }
+  update();
+}
+
+
+function sunburstToggle(element) {
+  var check_node = d3.select(element).node();
+  var parent_node = check_node.parentNode;
 
   if(element.checked) {
     d3.select(parent_node).classed("active", true);
   } else {
     d3.select(parent_node).classed("active", false);
   }
-  update(check_node);
 }
 
-function checkDuplicate(parent) {
-  var category = parent.parentNode;
-  var checks = category.getElementsByClassName("checkbox");
-  var restart_sunburst = false;
-  var already_checked = false;
+// function checkDuplicate(parent) {
+//   var category = parent.parentNode;
+//   var checks = category.getElementsByClassName("checkbox");
+//   var restart_sunburst = false;
+//   var already_checked = false;
 
-  for (element_id in checks) {
-    try {
-      var ele = document.getElementById(element_id).checked;
-      if (ele) { if (already_checked) {
-          restartSunburst();
-        } else {
-          already_checked = true;
-        }
-      }
-    } catch (e) {}
-  }
-}
+//   for (element_id in checks) {
+//     try {
+//       var ele = document.getElementById(element_id).checked;
+//       if (ele) { if (already_checked) {
+//           restartSunburst();
+//         } else {
+//           already_checked = true;
+//         }
+//       }
+//     } catch (e) {}
+//   }
+// }
 
 
 function uncheckAll() {
   var filters = document.getElementsByClassName("checkbox");
-
   for (element_id in filters) {
     try {
       var element = document.getElementById(element_id);
       element.checked = false;
-      toggleCheckbox(element);
+      sunburstToggle(element);
     } catch (e) {}
+
   }
 }
