@@ -43,6 +43,8 @@ var deets_on_demand = d3.select(".us_country_map").append("div")
           .style("border", "2px")
           .style("border-radius", "10px");
 
+// var close_deets_on_demand = deets_on_demand.append("")
+
 svg.append("rect")
     .attr("class", "background")
     .attr("width", width)
@@ -89,6 +91,16 @@ d3.csv("locations.csv", function(data) {
   draw_circles(modified_data, city_frequency);
 });
 
+const get_data_by_city = (city) => {
+  let city_data = [];
+  modified_data.forEach((d) => {
+    if (d["city-state"] === city) {
+      city_data.push(d);
+    }
+  });
+  return city_data;
+}
+
 const draw_circles = (data, city_frequency) => {
   already_drawn_dot = new Set();
   gPins.selectAll("circle")
@@ -128,11 +140,48 @@ const draw_circles = (data, city_frequency) => {
       .style("opacity", 0)
       .style("z-index", -1);
 
-      deets_on_demand.html("<strong>DEETS ON DEMAND</strong>")
+      let city_data = get_data_by_city(d["city-state"]);
+      let html_string = "<table>";
+      html_string += "<theader>"
+                  + "<th>Date</th>"
+                  + "<th>Name</th>"
+                  + "<th>Race</th>"
+                  + "<th>Gender</th>"
+                  + "<th>Age</th>"
+                  + "<th>Body Camera</th>"
+                  + "</theader>"
+      let i = 0;
+      //todo handle NULL Race
+      //todo convert 'true' and 'false' for body cam into yes and no
+      //todo make the deets on demand scrollable
+      //todo get rid of tk tk in name
+      city_data.forEach((e) => {
+        i++;
+        let background = i % 2 ? 'yellow' : 'white'
+        html_string += "<tr style='background: " + background + "'>"
+                    + "<td>" + e.date + "</td>"
+                    + "<td>" + e.name + "</td>"
+                    + "<td>" + e.race + "</td>"
+                    + "<td>" + e.gender + "</td>"
+                    + "<td>" + e.age + "</td>"
+                    + "<td>" + e.body_camera + "</td>"
+                    + "</tr>"
+      })
+      html_string += "</table>"
+
+      /**Add the details on demand**/
+      deets_on_demand.html("<strong style='margin-left: 10px'>" + d["city-state"] + "</strong>"
+                    + "<div style='display: inline-block; margin-right: 10px;"
+                    + "position: relative; float: right; cursor: pointer;' onClick='closeDeetsOnDemand()'>"
+                    + "X</div><br/>" + html_string)
       .style("left", (d3.event.pageX + 5) + "px")
       .style("top", (d3.event.pageY + 3) + "px")
+      .style("z-index", 0)
+      .style("opacity", 1);
+
     });
 }
+
 
 var map_frequency_to_radius = function(city, frequency) {
   return Math.sqrt(10 * frequency[city]/Math.PI)
@@ -173,7 +222,11 @@ function zoomed() {
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
   gPins.selectAll("circle").attr("r", () => 5 / d3.event.scale);
+  closeDeetsOnDemand();
 }
+
+function closeDeetsOnDemand() {deets_on_demand.style("z-index", "-1").style("opacity", 0);}
+
 
 // If the drag behavior prevents the default click,
 // also stop propagation so we don’t click-to-zoom.
