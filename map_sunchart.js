@@ -54,8 +54,7 @@ svg.append("rect")
     .attr("class", "background")
     .attr("width", width)
     .attr("height", height)
-    .on("click", reset);
-
+    .on("click", reset)
 var g = svg.append("g");
 var gPins = svg.append("g"); // new g element
 
@@ -227,6 +226,7 @@ const draw_circles = (data, city_frequency) => {
     .attr("transform", function(d) { return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .style("stroke", "white")
+    // .style("stroke-width", "0.75")
     .style("stroke-width", "0.55")
     .on("mouseover", function(d) {
       tooltip.transition()
@@ -295,7 +295,7 @@ const draw_circles = (data, city_frequency) => {
 
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(20 * frequency[city]/Math.PI)
+  return Math.sqrt(30 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -343,7 +343,7 @@ function zoomed() {
     }
  }).style("opacity", 0.65)
   .style("stroke", "white")
-  .style("stroke-width", "0.5");
+  .style("stroke-width", "" + (.75 / d3.event.scale));
   closeDeetsOnDemand();
 }
 
