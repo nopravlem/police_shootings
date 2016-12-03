@@ -62,7 +62,7 @@ svg
     //.call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
-d3.json("/sample/us.json", function(error, us) {
+d3.json("/stateMap/us.json", function(error, us) {
   if (error) throw error;
 
   g.selectAll("path")
@@ -82,7 +82,7 @@ var already_drawn_dot = new Set(); //so that we don't keep drawing the same dot 
                           //this makes it so that lowering the opacity will allow us to actually
                           //see what's beneath the dot instead of the same dot
 
-d3.csv("locations.csv", function(data) {
+d3.csv("data/locations.csv", function(data) {
   data.forEach(function(d) {
     d["city-state"] = d.city + ", " + d.state;
     if (city_frequency[d["city-state"]]) {
@@ -128,7 +128,7 @@ function update() {
   city_frequency = {};
   gPins.selectAll("circle").remove();
 
-    d3.csv("locations.csv", function(data) {
+    d3.csv("data/locations.csv", function(data) {
 
       data.forEach(function(d) {
         for(i = 0; i < filters.length; i++ ) {
@@ -178,6 +178,11 @@ function update() {
               if(age >= 60) {
                 ageFiltered_data.add(d);
               }
+            } else if(filters[i].value == "NULL" && filters[i].checked == true) {
+              if(filters[i].value == d[filters[i].name]) {
+                ageFiltered_data.add(d);
+                console.log(ageFiltered_data.size);
+              }
             }
           }
         }
@@ -218,10 +223,11 @@ const draw_circles = (data, city_frequency) => {
         return 0;
       }
     })
-    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
+    .attr("transform", function(d) { return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .style("stroke", "white")
-    .style("stroke-width", "0.75")
+    // .style("stroke-width", "0.75")
+    .style("stroke-width", "0.55")
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
@@ -360,7 +366,9 @@ function sunburstDraw(scope, element) {
 
   scope.$watch("data", function() {
     var data = scope.data;
-    render(data);
+    if (data !== undefined) {
+      render(data);
+    }
   });
 
   var width = 500;
@@ -658,7 +666,6 @@ function sunburstDraw(scope, element) {
 
     uncheckAll();
     while (num_factors > 0) {
-      console.log("ask toggle")
       var factor = checkboxes[num_factors - 1].textContent.trim() + "_id";
       document.getElementById(factor).checked = true;
       sunburstToggle(document.getElementById(factor));

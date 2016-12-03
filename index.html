@@ -49,12 +49,13 @@
             <td class="category">Age:</td>
             <td id="filters-gender">
               <div id="age">
-              <label class="btn"><input class="checkbox" id="Youth_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Youth">Youth</label>
-              <label class="btn"><input class="checkbox" id="Twenties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Twenties">Twenties</label>
-              <label class="btn"><input class="checkbox" id="Thirties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Thirties">Thirties</label>
-              <label class="btn"><input class="checkbox" id="Forties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Forties">Forties</label>
-              <label class="btn"><input class="checkbox" id="Fifties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Fifties">Fifties</label>
-              <label class="btn"><input class="checkbox" id="Elderly_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Elderly">Elderly</label>
+              <label class="btn"><input class="checkbox" id="Youth_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Youth">Under 20</label>
+              <label class="btn"><input class="checkbox" id="Twenties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Twenties">20s</label>
+              <label class="btn"><input class="checkbox" id="Thirties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Thirties">30s</label>
+              <label class="btn"><input class="checkbox" id="Forties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Forties">40s</label>
+              <label class="btn"><input class="checkbox" id="Fifties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Fifties">50s</label>
+              <label class="btn"><input class="checkbox" id="Elderly_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Elderly">60 and Older</label>
+              <label class="btn"><input class="checkbox" id="UnknownAge_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="NULL">Unknown</label>
               </div>
             </td>
           <tr>
@@ -73,6 +74,7 @@
     <script src="http://code.angularjs.org/1.3.5/angular.js"></script>
     <script src="app.js"></script>
     <script src="map_sunchart.js"></script>
+
     <script>
       // Make example display correctly in an iframe on bl.ocks.org
       d3.select(self.frameElement).style("height", "1000px");
