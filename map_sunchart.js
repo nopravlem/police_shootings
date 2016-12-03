@@ -100,7 +100,18 @@ const get_data_by_city = (city) => {
   let city_data = [];
   modified_data.forEach((d) => {
     if (d["city-state"] === city) {
-      city_data.push(d);
+      for (var field in d) {
+       if (d[field] === "NULL" || d[field] === "TK TK") {
+          d[field] = "Unknown"
+       }
+       if (d[field] === "TRUE") {
+           d[field] = "YES";
+       }
+       if (d[field] === "FALSE") {
+           d[field] = "NO"
+       }
+     }
+    city_data.push(d);
     }
   });
   return city_data;
