@@ -176,7 +176,7 @@ const draw_circles = (data, city_frequency) => {
                     + "X</div><br/>" + html_string)
       .style("left", (d3.event.pageX + 5) + "px")
       .style("top", (d3.event.pageY + 3) + "px")
-      .style("z-index", 0)
+      .style("z-index", 1)
       .style("opacity", 1);
 
     });
