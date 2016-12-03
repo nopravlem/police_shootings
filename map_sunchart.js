@@ -592,8 +592,6 @@ function sunburstDraw(scope, element) {
     totalSize = path.node().__data__.value;
   }
 
-
-
   // helper function mouseover to handle mouseover events/animations and calculation of ancestor nodes etc
   function mouseover(d) {
     // build percentage string
@@ -603,9 +601,11 @@ function sunburstDraw(scope, element) {
       percentageString = "< 1.0%";
     }
 
+    var rawNumString = d.value + "";
+
     // update breadcrumbs (get all ancestors)
     var ancestors = getAncestors(d);
-    updateBreadcrumbs(ancestors, percentageString);
+    updateBreadcrumbs(ancestors, rawNumString);
 
     // update sunburst (Fade all the segments and highlight only ancestors of current segment)
     sunburst.selectAll("path")
@@ -619,7 +619,7 @@ function sunburstDraw(scope, element) {
     // update summary
     summary.html(
       "<span class='percentage'>" + percentageString + "</span><br />"
-      // d.value + " of " + totalSize + "<br />"
+      // + d.value + " of " + totalSize + "<br />"
     );
 
     // display summary and breadcrumbs if hidden
@@ -707,7 +707,7 @@ function sunburstDraw(scope, element) {
 
 
   // Update the breadcrumb breadcrumbs to show the current sequence and percentage.
-  function updateBreadcrumbs(ancestors, percentageString) {
+  function updateBreadcrumbs(ancestors, rawNumString) {
     // Data join, where primary key = name + depth.
     var g = breadcrumbs.selectAll(".newData")
       .data(ancestors, function(d) {
@@ -743,14 +743,14 @@ function sunburstDraw(scope, element) {
     g.exit().remove();
     //redraw the template
 
-    // // Update percentage at the lastCrumb.
-    // lastCrumb
-    //   .attr("x", 4.6 * (b.w + b.s))
-    //   .attr("y", b.h / 2)
-    //   .attr("dy", "0.35em")
-    //   .attr("text-anchor", "middle")
-    //   .attr("font-weight", 600)
-    //   .text(percentageString);
+    // Update percentage at the lastCrumb.
+    lastCrumb
+      .attr("x", 4.6 * (b.w + b.s))
+      .attr("y", b.h / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .attr("font-weight", 600)
+      .text(rawNumString);
   }
 
 
