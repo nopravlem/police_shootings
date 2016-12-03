@@ -208,10 +208,10 @@ const draw_circles = (data, city_frequency) => {
         return 0;
       }
     })
-    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
+    .attr("transform", function(d) { return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .style("stroke", "white")
-    .style("stroke-width", "0.5")
+    .style("stroke-width", "0.55")
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
@@ -350,7 +350,9 @@ function sunburstDraw(scope, element) {
 
   scope.$watch("data", function() {
     var data = scope.data;
-    render(data);
+    if (data !== undefined) {
+      render(data);
+    }
   });
 
   var width = 500;
@@ -647,7 +649,6 @@ function sunburstDraw(scope, element) {
 
     uncheckAll();
     while (num_factors > 0) {
-      console.log("ask toggle")
       var factor = checkboxes[num_factors - 1].textContent.trim() + "_id";
       document.getElementById(factor).checked = true;
       sunburstToggle(document.getElementById(factor));
