@@ -132,6 +132,11 @@ function update() {
               genFiltered_data.add(d);
             }
           }
+          if(filters[i].name == "body_camera") {
+            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
+              camFiltered_data.add(d);
+            }
+          }
           if(filters[i].name == "age") {
             if(filters[i].value == "Youth" && filters[i].checked == true) {
               var age = +d["age"];
