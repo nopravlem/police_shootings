@@ -1,12 +1,5 @@
 let globaldata = [];
 var view_country = true;
-var modified_data = [];
-var city_frequency = {};
-var raceFiltered_data = new Set();
-var genFiltered_data = new Set();
-var camFiltered_data = new Set();
-var ageFiltered_data = new Set();
-var allFiltered_data = new Set();
 
 var width = 780,
     height = 500,
@@ -105,94 +98,7 @@ const get_data_by_city = (city) => {
   });
   return city_data;
 }
-//method to update map based on user selected filters
-function update() {
-  raceFiltered_data = new Set();
-  genFiltered_data = new Set();
-  camFiltered_data = new Set();
-  ageFiltered_data = new Set();
-  allFiltered_data = new Set();
-  var filters = document.getElementsByClassName("checkbox");
 
-  modified_data = [];
-  city_frequency = {};
-  gPins.selectAll("circle").remove();
-
-    d3.csv("locations.csv", function(data) {
-
-      data.forEach(function(d) {
-        for(i = 0; i < filters.length; i++ ) {
-          if(filters[i].name == "race") {
-            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
-              raceFiltered_data.add(d);
-            }
-          }
-          if(filters[i].name == "gender") {
-            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
-              genFiltered_data.add(d);
-            }
-          }
-          if(filters[i].name == "body_camera") {
-            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
-              camFiltered_data.add(d);
-            }
-          }
-          if(filters[i].name == "age") {
-            if(filters[i].value == "Youth" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(1 <= age && age <= 19) {
-                ageFiltered_data.add(d);
-              }
-            } else if(filters[i].value == "Twenties" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(20 <= age && age <= 29) {
-                ageFiltered_data.add(d);
-              }
-            } else if(filters[i].value == "Thirties" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(30 <= age && age <= 39) {
-                ageFiltered_data.add(d);
-              }
-            } else if(filters[i].value == "Forties" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(40 <= age && age <= 49) {
-                ageFiltered_data.add(d);
-              }
-            } else if(filters[i].value == "Fifties" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(50 <= age && age <= 59) {
-                ageFiltered_data.add(d);
-              }
-            } else if(filters[i].value == "Elderly" && filters[i].checked == true) {
-              var age = +d["age"];
-              if(age >= 60) {
-                ageFiltered_data.add(d);
-              }
-            }
-          }
-        }
-      })
-      //checks each bucket to verify data point belongs in filter when there are multiple
-      data.forEach(function(d) {
-        if((raceFiltered_data.has(d) || raceFiltered_data.size == 0)
-        && (genFiltered_data.has(d) || genFiltered_data.size == 0)
-        && (camFiltered_data.has(d) || camFiltered_data.size == 0)
-        && (ageFiltered_data.has(d) || ageFiltered_data.size == 0)) {
-          allFiltered_data.add(d);
-        }
-      })
-      allFiltered_data.forEach(function(d) {
-      d["city-state"] = d.city + ", " + d.state;
-      if (city_frequency[d["city-state"]]) {
-        city_frequency[d["city-state"]] += 1;
-      } else {
-        city_frequency[d["city-state"]] = 1;
-      }
-      modified_data.push(d);
-    });
-    draw_circles(modified_data, city_frequency);
-  });
-}
 
 const draw_circles = (data, city_frequency) => {
   already_drawn_dot = new Set();
@@ -317,7 +223,6 @@ function zoomed() {
   g.style("stroke-width", 1.5 / d3.event.scale + "px");
   g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   gPins.attr("transform","translate("+ d3.event.translate+")scale("+d3.event.scale+")");
-  // gPins.selectAll("circle").forEach((d) => console.log(d))
   gPins.selectAll("circle").attr("r", (d) => {
     if (!already_drawn_dot.has(d["city-state"])) {
       already_drawn_dot.add(d["city-state"])
@@ -341,9 +246,6 @@ function stopped() {
 }
 
 //------------------------------------------------------------------------------------------------------------//
-var gl_scope = null;
-var gl_element = null;
-
 function sunburstDraw(scope, element) {
   gl_scope = scope;
   gl_element = element;
@@ -403,8 +305,6 @@ function sunburstDraw(scope, element) {
     .outerRadius(function(d) {
       return Math.sqrt(d.y + d.dy);
     });
-
-
 
   var vis = d3.select(element[0])
     .append("div").classed("vis-continer", true)
@@ -535,7 +435,6 @@ function sunburstDraw(scope, element) {
       .text("Hover");
   }
 
-
   // removes existing SVG components
   function removeVisualization() {
     sunburst.selectAll(".nodePath").remove();
@@ -627,10 +526,8 @@ function sunburstDraw(scope, element) {
     breadcrumbs.style("visibility", "");
   }
 
-
   // helper function click to handle mouseleave events/animations
   function click(d) {
-
     //after clicked on, keep normal. When mouse scrolls away from chart, then reset?
 
     sunburst.selectAll("path").on("mouseover", null);
@@ -654,7 +551,7 @@ function sunburstDraw(scope, element) {
       num_factors--;
     }
 
-  update();
+    filterUpdate();
 
     // hide summary and breadcrumbs if visible
     breadcrumbs.selectAll(".newData").remove();
@@ -689,7 +586,6 @@ function sunburstDraw(scope, element) {
     return points.join(" ");
   }
 
-
   // Generate a string representation for drawing a breadcrumb polygon.
   function breadcrumbPoints(d, i) {
     var points = [];
@@ -704,7 +600,6 @@ function sunburstDraw(scope, element) {
     }
     return points.join(" ");
   }
-
 
   // Update the breadcrumb breadcrumbs to show the current sequence and percentage.
   function updateBreadcrumbs(ancestors, rawNumString) {
@@ -734,7 +629,6 @@ function sunburstDraw(scope, element) {
       });
 
     // Set position for entering and updating nodes.
-    // console.log((i * (b.w + b.s) + ""));
     g.attr("transform", function(d, i) {
       return "translate(" + i * (b.w + b.s) + ", 0)";
     });
@@ -752,8 +646,6 @@ function sunburstDraw(scope, element) {
       .attr("font-weight", 600)
       .text(rawNumString);
   }
-
-
 
   // Take a 4-column CSV of ["sequence", "stage", "node", "value"] and
   // transform it into a hierarchical structure suitable for a partition layout.
@@ -845,6 +737,15 @@ function sunburstDraw(scope, element) {
 
 //------------------------------------------------------------------------------------------------------------//
 
+var modified_data = [];
+var city_frequency = {};
+raceFiltered_data = new Set();
+genFiltered_data = new Set();
+camFiltered_data = new Set();
+ageFiltered_data = new Set();
+allFiltered_data = new Set();
+var filters = document.getElementsByClassName("checkbox");
+
 // checkboxes
 function toggleCheckbox(element) {
   var check_node = d3.select(element).node();
@@ -855,7 +756,7 @@ function toggleCheckbox(element) {
   } else {
     d3.select(parent_node).classed("active", false);
   }
-  update();
+  filterUpdate();
 }
 
 
@@ -889,7 +790,6 @@ function sunburstToggle(element) {
 //   }
 // }
 
-
 function uncheckAll() {
   var filters = document.getElementsByClassName("checkbox");
   for (element_id in filters) {
@@ -900,4 +800,98 @@ function uncheckAll() {
     } catch (e) {}
 
   }
+}
+
+function checkAll(category) {
+  var filters = document.getElementsByClassName(category);
+  for (element_id in filters) {
+    try {
+      var element = document.getElementById(element_id);
+      element.checked = false;
+      sunburstToggle(element);
+    } catch (e) {}
+
+  }
+}
+
+//method to update map based on user selected filters
+function filterUpdate() {
+  modified_data = [];
+  city_frequency = {};
+  gPins.selectAll("circle").remove();
+
+    d3.csv("locations.csv", function(data) {
+
+      data.forEach(function(d) {
+        for(i = 0; i < filters.length; i++ ) {
+          if(filters[i].name == "race") {
+            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
+              raceFiltered_data.add(d);
+            }
+          }
+          if(filters[i].name == "gender") {
+            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
+              genFiltered_data.add(d);
+            }
+          }
+          if(filters[i].name == "body_camera") {
+            if(filters[i].value == d[filters[i].name] && filters[i].checked == true) {
+              camFiltered_data.add(d);
+            }
+          }
+          if(filters[i].name == "age") {
+            if(filters[i].value == "Youth" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(1 <= age && age <= 19) {
+                ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "Twenties" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(20 <= age && age <= 29) {
+                ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "Thirties" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(30 <= age && age <= 39) {
+                ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "Forties" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(40 <= age && age <= 49) {
+                ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "Fifties" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(50 <= age && age <= 59) {
+                ageFiltered_data.add(d);
+              }
+            } else if(filters[i].value == "Elderly" && filters[i].checked == true) {
+              var age = +d["age"];
+              if(age >= 60) {
+                ageFiltered_data.add(d);
+              }
+            }
+          }
+        }
+      })
+      //checks each bucket to verify data point belongs in filter when there are multiple
+      data.forEach(function(d) {
+        if((raceFiltered_data.has(d) || raceFiltered_data.size == 0)
+        && (genFiltered_data.has(d) || genFiltered_data.size == 0)
+        && (camFiltered_data.has(d) || camFiltered_data.size == 0)
+        && (ageFiltered_data.has(d) || ageFiltered_data.size == 0)) {
+          allFiltered_data.add(d);
+        }
+      })
+      allFiltered_data.forEach(function(d) {
+      d["city-state"] = d.city + ", " + d.state;
+      if (city_frequency[d["city-state"]]) {
+        city_frequency[d["city-state"]] += 1;
+      } else {
+        city_frequency[d["city-state"]] = 1;
+      }
+      modified_data.push(d);
+    });
+    draw_circles(modified_data, city_frequency);
+  });
 }
