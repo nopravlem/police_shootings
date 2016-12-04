@@ -45,6 +45,7 @@ var deets_on_demand = d3.select(".us_country_map").append("div")
           .style("position", "absolute")
           .style("background", "white")
           .style("color", "#783eff")
+          .style("color", "black")
           .style("border", "2px")
           .style("border-radius", "10px");
 
@@ -54,8 +55,7 @@ svg.append("rect")
     .attr("class", "background")
     .attr("width", width)
     .attr("height", height)
-    .on("click", reset);
-
+    .on("click", reset)
 var g = svg.append("g");
 var gPins = svg.append("g"); // new g element
 
@@ -101,7 +101,7 @@ const get_data_by_city = (city) => {
   modified_data.forEach((d) => {
     if (d["city-state"] === city) {
       for (var field in d) {
-       if (d[field] === "NULL" || d[field] === "TK TK") {
+       if (d[field] === "NULL" || d[field] === "TK TK" || d[field] === "TK Tk") {
           d[field] = "Unknown"
        }
        if (d[field] === "TRUE") {
@@ -227,7 +227,8 @@ const draw_circles = (data, city_frequency) => {
     .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .style("stroke", "white")
-    .style("stroke-width", "0.5")
+    // .style("stroke-width", "0.75")
+    .style("stroke-width", "0.55")
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
@@ -250,38 +251,44 @@ const draw_circles = (data, city_frequency) => {
       tooltip.transition()
       .style("opacity", 0)
       .style("z-index", -1);
-
       let city_data = get_data_by_city(d["city-state"]);
-      let html_string = "<table>";
-      html_string += "<theader>"
-                  + "<th>Date</th>"
-                  + "<th>Name</th>"
-                  + "<th>Race</th>"
-                  + "<th>Gender</th>"
-                  + "<th>Age</th>"
-                  + "<th>Body Camera</th>"
-                  + "</theader>"
+      let html_string = "<table id='deets_on_demand'>";
+      html_string += "<thead>"
+                  + "<th class='date_col'>Date  <a href=\"javascript:sort_table_by_column(true, 'date_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'date_col', 'deets_on_demand')\">&#8595</a></th>"
+
+                  + "<th class='name_col'>Name  <a href=\"javascript:sort_table_by_column(true, 'name_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'name_col', 'deets_on_demand')\">&#8595</a></th>"
+                  
+                  + "<th class='race_col'>Race  <a href=\"javascript:sort_table_by_column(true, 'race_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'race_col', 'deets_on_demand')\">&#8595</a></th>"
+                  
+                  + "<th class='gender_col'>Gender  <a href=\"javascript:sort_table_by_column(true, 'gender_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'gender_col', 'deets_on_demand')\">&#8595</a></th>"
+
+                  + "<th class='age_col'>Age  <a href=\"javascript:sort_table_by_column(true, 'age_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'age_col', 'deets_on_demand')\">&#8595</a></th>"
+                  
+                + "<th class='body_camera_col'>Body Camera  <a href=\"javascript:sort_table_by_column(true, 'body_camera_col', 'deets_on_demand')\">&#8593</a> "
+                  + "<a href=\"javascript:sort_table_by_column(false, 'body_camera_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "</thead><tbody>"
       let i = 0;
-      //todo handle NULL Race
-      //todo convert 'true' and 'false' for body cam into yes and no
-      //todo make the deets on demand scrollable
-      //todo get rid of tk tk in name
       city_data.forEach((e) => {
         i++;
-        let background = i % 2 ? 'yellow' : 'white'
+        let background = i % 2 ? '#B8D1F3' : '#DAE5F4'
         html_string += "<tr style='background: " + background + "'>"
-                    + "<td>" + e.date + "</td>"
-                    + "<td>" + e.name + "</td>"
-                    + "<td>" + e.race + "</td>"
-                    + "<td>" + e.gender + "</td>"
-                    + "<td>" + e.age + "</td>"
-                    + "<td>" + e.body_camera + "</td>"
+                    + "<td class='date_col'>" + e.date + "</td>"
+                    + "<td class='name_col'>" + e.name + "</td>"
+                    + "<td class='race_col'>" + e.race + "</td>"
+                    + "<td class='gender_col'>" + e.gender + "</td>"
+                    + "<td class='age_col'>" + e.age + "</td>"
+                    + "<td class='body_camera_col'>" + e.body_camera + "</td>"
                     + "</tr>"
       })
-      html_string += "</table>"
+      html_string += "</tbody></table>"
 
       /**Add the details on demand**/
-      deets_on_demand.html("<strong style='margin-left: 10px'>" + d["city-state"] + "</strong>"
+      deets_on_demand.html("<strong style='margin-left: 10px; font-size: 18px'>" + d["city-state"] + "</strong>"
                     + "<div style='display: inline-block; margin-right: 10px;"
                     + "position: relative; float: right; cursor: pointer;' onClick='closeDeetsOnDemand()'>"
                     + "X</div><br/>" + html_string)
@@ -293,9 +300,36 @@ const draw_circles = (data, city_frequency) => {
     });
 }
 
+function sort_table_by_column(ascending, column_class, table_id) {
+  var tbody = document.getElementById(table_id).getElementsByTagName("tbody")[0]; 
+  var rows = tbody.getElementsByTagName("tr");
+  var unsorted = true;
+  while (unsorted) {
+    unsorted = false
+    for (var r = 0; r < rows.length - 1; r++) {
+      var row = rows[r];
+      var nextRow = rows[r + 1];
+      var value = row.getElementsByClassName(column_class)[0].innerHTML;
+      var nextValue = nextRow.getElementsByClassName(column_class)[0].innerHTML;
+      if (column_class === "date_col") {
+        value = new Date(value);
+        nextValue = new Date(nextValue);
+      }
+      if (ascending ? value > nextValue : value < nextValue) {
+          tbody.insertBefore(nextRow, row);
+          unsorted = true;
+      }
+    }
+  } 
+  rows = tbody.getElementsByTagName("tr");
+  for (var i = 0; i < rows.length; i++) {
+      rows[i].style["background-color"] = (i + 1) % 2 ? '#B8D1F3' : '#DAE5F4'
+  }
+}
+
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(20 * frequency[city]/Math.PI)
+  return Math.sqrt(30 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -343,7 +377,7 @@ function zoomed() {
     }
  }).style("opacity", 0.65)
   .style("stroke", "white")
-  .style("stroke-width", "0.5");
+  .style("stroke-width", "" + (.75 / d3.event.scale));
   closeDeetsOnDemand();
 }
 
