@@ -51,9 +51,8 @@ body {
 	/*background: #232323;*/
 	margin-top: 390px;
 	float: left;
-	width: 400px;
+	width: 430px;
 	border-radius: 10px;
-	margin-left: 25px;
 	color: #fff;
 	font-size: 14px;
 }
@@ -78,14 +77,23 @@ body {
 	position: absolute;
 	clip: rect(0,0,0,0);
 }
-.filters tr {
-	height: 2.2em;
+
+.row {
+	margin-bottom: 13px;
 }
+
+#gender_filter .category { margin-top: -5px; }
+#age_filter .category { padding-top: 12px; }
+#race_filter .category { padding-top: 12px; }
+
+
 .filters .category {
-	font-style: bold;
-	font-size: 14px;
+	font-size: 21px;
 	float: right;
-	padding: 8px 5px 0 0;
+	padding-right: 10px;
+}
+.filters .category input {
+	margin-right: 5px;
 }
 
 

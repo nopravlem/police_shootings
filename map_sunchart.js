@@ -224,10 +224,10 @@ const draw_circles = (data, city_frequency) => {
         return 0;
       }
     })
-    .attr("transform", function(d) { return "translate(" + projection([d.longitude,d.latitude]) + ")";})
+    .attr("transform", function(d) {return "translate(" + projection([d.longitude,d.latitude]) + ")";})
     .style("opacity", 0.65)
     .style("stroke", "white")
-    .style("stroke-width", "0.55")
+    .style("stroke-width", "0.5")
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
