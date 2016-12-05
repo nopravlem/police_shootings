@@ -34,7 +34,7 @@ var svg = d3.select(".us_country_map").append("svg")
 var tooltip = d3.select(".us_country_map").append("div")
         // .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("color", "#783eff")
+        .style("color", "black")
         .style("background", "white")
         .style("border", "0px")
         .style("border-radius", "8px")
@@ -43,10 +43,14 @@ var tooltip = d3.select(".us_country_map").append("div")
 
 var deets_on_demand = d3.select(".us_country_map").append("div")
           .style("position", "absolute")
+          // .style("max-height", "200px")
+          // .style("overflow-y", "scroll")
+          // .style("height", "200px")
           .style("background", "white")
           .style("color", "#783eff")
           .style("color", "black")
           .style("border", "2px")
+          .style("font-family", "sans-serif")
           .style("border-radius", "10px");
 
 // var close_deets_on_demand = deets_on_demand.append("")
@@ -232,7 +236,7 @@ const draw_circles = (data, city_frequency) => {
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
-      .style("opacity", 0.75);
+      .style("opacity", 1);
       d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
       tooltip.html("<strong>City: " + d["city-state"] + "</strong><br/>"
@@ -252,7 +256,7 @@ const draw_circles = (data, city_frequency) => {
       .style("opacity", 0)
       .style("z-index", -1);
       let city_data = get_data_by_city(d["city-state"]);
-      let html_string = "<table id='deets_on_demand'>";
+      let html_string = "<div style = 'overflow-y: scroll; max-height: 200px;'><table id='deets_on_demand'>";
       html_string += "<thead>"
                   + "<th class='date_col'>Date  <a href=\"javascript:sort_table_by_column(true, 'date_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'date_col', 'deets_on_demand')\">&#8595</a></th>"
@@ -285,7 +289,7 @@ const draw_circles = (data, city_frequency) => {
                     + "<td class='body_camera_col'>" + e.body_camera + "</td>"
                     + "</tr>"
       })
-      html_string += "</tbody></table>"
+      html_string += "</tbody></table></div>"
 
       /**Add the details on demand**/
       deets_on_demand.html("<strong style='margin-left: 10px; font-size: 18px'>" + d["city-state"] + "</strong>"
