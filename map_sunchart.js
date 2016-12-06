@@ -333,7 +333,7 @@ function sort_table_by_column(ascending, column_class, table_id) {
 
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(30 * frequency[city]/Math.PI)
+  return Math.sqrt(40 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -351,7 +351,7 @@ function clicked(d) {
 
   svg.transition()
       .duration(750)
-      .call(zoom.translate(translate).scale(scale).event);
+      .call(zoom.translate(translate).scale(scale).event)
 
   view_country = !view_country;
   draw_circles(modified_data, city_frequency)
@@ -375,7 +375,7 @@ function zoomed() {
   gPins.selectAll("circle").attr("r", (d) => {
     if (!already_drawn_dot.has(d["city-state"])) {
       already_drawn_dot.add(d["city-state"])
-      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale
+      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale;
     } else {
       return 0;
     }
@@ -438,6 +438,7 @@ function sunburstDraw(scope, element) {
   };
 
   var colors = d3.scale.category10();
+  console.log(colors)
   var totalSize = 0;
 
   var partition = d3.layout.partition()
