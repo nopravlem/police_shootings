@@ -437,7 +437,7 @@ function sunburstDraw(scope, element) {
     right: radius / 2
   };
 
-  var colors = d3.scale.category10();
+  var colors = d3.scale.category20d();
   console.log(colors)
   var totalSize = 0;
 
