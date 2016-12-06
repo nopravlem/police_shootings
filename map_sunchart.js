@@ -259,16 +259,16 @@ const draw_circles = (data, city_frequency) => {
 
                   + "<th class='name_col'>Name  <a href=\"javascript:sort_table_by_column(true, 'name_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'name_col', 'deets_on_demand')\">&#8595</a></th>"
-                  
+
                   + "<th class='race_col'>Race  <a href=\"javascript:sort_table_by_column(true, 'race_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'race_col', 'deets_on_demand')\">&#8595</a></th>"
-                  
+
                   + "<th class='gender_col'>Gender  <a href=\"javascript:sort_table_by_column(true, 'gender_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'gender_col', 'deets_on_demand')\">&#8595</a></th>"
 
                   + "<th class='age_col'>Age  <a href=\"javascript:sort_table_by_column(true, 'age_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'age_col', 'deets_on_demand')\">&#8595</a></th>"
-                  
+
                 + "<th class='body_camera_col'>Body Camera  <a href=\"javascript:sort_table_by_column(true, 'body_camera_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'body_camera_col', 'deets_on_demand')\">&#8595</a></th>"
                   + "</thead><tbody>"
@@ -301,7 +301,7 @@ const draw_circles = (data, city_frequency) => {
 }
 
 function sort_table_by_column(ascending, column_class, table_id) {
-  var tbody = document.getElementById(table_id).getElementsByTagName("tbody")[0]; 
+  var tbody = document.getElementById(table_id).getElementsByTagName("tbody")[0];
   var rows = tbody.getElementsByTagName("tr");
   var unsorted = true;
   while (unsorted) {
@@ -320,7 +320,7 @@ function sort_table_by_column(ascending, column_class, table_id) {
           unsorted = true;
       }
     }
-  } 
+  }
   rows = tbody.getElementsByTagName("tr");
   for (var i = 0; i < rows.length; i++) {
       rows[i].style["background-color"] = (i + 1) % 2 ? '#B8D1F3' : '#DAE5F4'
@@ -741,7 +741,6 @@ function sunburstDraw(scope, element) {
     return points.join(" ");
   }
 
-
   // Generate a string representation for drawing a breadcrumb polygon.
   function breadcrumbPoints(d, i) {
     var points = [];
@@ -804,8 +803,6 @@ function sunburstDraw(scope, element) {
       .attr("font-weight", 600)
       .text(rawNumString);
   }
-
-
 
   // Take a 4-column CSV of ["sequence", "stage", "node", "value"] and
   // transform it into a hierarchical structure suitable for a partition layout.
@@ -921,26 +918,6 @@ function sunburstToggle(element) {
     d3.select(parent_node).classed("active", false);
   }
 }
-
-// function checkDuplicate(parent) {
-//   var category = parent.parentNode;
-//   var checks = category.getElementsByClassName("checkbox");
-//   var restart_sunburst = false;
-//   var already_checked = false;
-
-//   for (element_id in checks) {
-//     try {
-//       var ele = document.getElementById(element_id).checked;
-//       if (ele) { if (already_checked) {
-//           restartSunburst();
-//         } else {
-//           already_checked = true;
-//         }
-//       }
-//     } catch (e) {}
-//   }
-// }
-
 
 function uncheckAll() {
   var filters = document.getElementsByClassName("checkbox");
