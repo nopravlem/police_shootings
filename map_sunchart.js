@@ -584,7 +584,7 @@ function sunburstDraw(scope, element) {
     }
 
     lastCrumb
-      .attr("x", 4.6 * (b.w + b.s))
+      .attr("x", 4.9 * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
