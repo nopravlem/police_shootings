@@ -34,7 +34,7 @@ var svg = d3.select(".us_country_map").append("svg")
 var tooltip = d3.select(".us_country_map").append("div")
         // .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("color", "black")
+        .style("color", "#783eff")
         .style("background", "white")
         .style("border", "0px")
         .style("border-radius", "8px")
@@ -43,14 +43,10 @@ var tooltip = d3.select(".us_country_map").append("div")
 
 var deets_on_demand = d3.select(".us_country_map").append("div")
           .style("position", "absolute")
-          // .style("max-height", "200px")
-          // .style("overflow-y", "scroll")
-          // .style("height", "200px")
           .style("background", "white")
           .style("color", "#783eff")
           .style("color", "black")
           .style("border", "2px")
-          .style("font-family", "sans-serif")
           .style("border-radius", "10px");
 
 // var close_deets_on_demand = deets_on_demand.append("")
@@ -236,7 +232,7 @@ const draw_circles = (data, city_frequency) => {
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
-      .style("opacity", 1);
+      .style("opacity", 0.75);
       d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
       tooltip.html("<strong>City: " + d["city-state"] + "</strong><br/>"
@@ -256,7 +252,7 @@ const draw_circles = (data, city_frequency) => {
       .style("opacity", 0)
       .style("z-index", -1);
       let city_data = get_data_by_city(d["city-state"]);
-      let html_string = "<div style = 'overflow-y: scroll; max-height: 200px;'><table id='deets_on_demand'>";
+      let html_string = "<table id='deets_on_demand'>";
       html_string += "<thead>"
                   + "<th class='date_col'>Date  <a href=\"javascript:sort_table_by_column(true, 'date_col', 'deets_on_demand')\">&#8593</a> "
                   + "<a href=\"javascript:sort_table_by_column(false, 'date_col', 'deets_on_demand')\">&#8595</a></th>"
@@ -289,7 +285,7 @@ const draw_circles = (data, city_frequency) => {
                     + "<td class='body_camera_col'>" + e.body_camera + "</td>"
                     + "</tr>"
       })
-      html_string += "</tbody></table></div>"
+      html_string += "</tbody></table>"
 
       /**Add the details on demand**/
       deets_on_demand.html("<strong style='margin-left: 10px; font-size: 18px'>" + d["city-state"] + "</strong>"
@@ -333,7 +329,7 @@ function sort_table_by_column(ascending, column_class, table_id) {
 
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(40 * frequency[city]/Math.PI)
+  return Math.sqrt(30 * frequency[city]/Math.PI)
 }
 
 function clicked(d) {
@@ -351,7 +347,7 @@ function clicked(d) {
 
   svg.transition()
       .duration(750)
-      .call(zoom.translate(translate).scale(scale).event)
+      .call(zoom.translate(translate).scale(scale).event);
 
   view_country = !view_country;
   draw_circles(modified_data, city_frequency)
@@ -375,7 +371,7 @@ function zoomed() {
   gPins.selectAll("circle").attr("r", (d) => {
     if (!already_drawn_dot.has(d["city-state"])) {
       already_drawn_dot.add(d["city-state"])
-      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale;
+      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale
     } else {
       return 0;
     }
@@ -437,8 +433,7 @@ function sunburstDraw(scope, element) {
     right: radius / 2
   };
 
-  var colors = d3.scale.category20d();
-  console.log(colors)
+  var colors = d3.scale.category10();
   var totalSize = 0;
 
   var partition = d3.layout.partition()
@@ -460,8 +455,6 @@ function sunburstDraw(scope, element) {
     .outerRadius(function(d) {
       return Math.sqrt(d.y + d.dy);
     });
-
-
 
   var vis = d3.select(element[0])
     .append("div").classed("vis-continer", true)
@@ -588,8 +581,9 @@ function sunburstDraw(scope, element) {
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .attr("font-weight", 600);
-        }
+      .attr("font-weight", 600)
+      .text("Hover");
+  }
 
 
   // removes existing SVG components
@@ -675,7 +669,7 @@ function sunburstDraw(scope, element) {
 
     // update summary
     summary.html(
-      "<span class='percentage'>" + percentageString + "<br/> " + rawNumString + " Deaths </span><br />"
+      "<span class='percentage'>" + percentageString + "</span><br />"
       // + d.value + " of " + totalSize + "<br />"
     );
 
@@ -800,12 +794,12 @@ function sunburstDraw(scope, element) {
 
     // Update percentage at the lastCrumb.
     lastCrumb
-      .attr("x", 4.9 * (b.w + b.s))
+      .attr("x", 4.6 * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-weight", 600)
-      .text(rawNumString + " Deaths");
+      .text(rawNumString);
   }
 
   // Take a 4-column CSV of ["sequence", "stage", "node", "value"] and

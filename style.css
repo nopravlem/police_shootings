@@ -88,9 +88,9 @@ body {
 #age_filter .category { padding-top: 12px; }
 #race_filter .category { padding-top: 12px; }
 
-#gender_filter { height: 40px;}
-#age_filter { height: 65px; }
-#race_filter { height: 65px; }
+#gender_filter { height: 45px;}
+#age_filter { height: 70px; }
+#race_filter { height: 70px; }
 
 
 .filters .category {
