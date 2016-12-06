@@ -587,9 +587,8 @@ function sunburstDraw(scope, element) {
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .attr("font-weight", 600)
-      .text("Hover");
-  }
+      .attr("font-weight", 600);
+        }
 
 
   // removes existing SVG components
@@ -675,7 +674,7 @@ function sunburstDraw(scope, element) {
 
     // update summary
     summary.html(
-      "<span class='percentage'>" + percentageString + "</span><br />"
+      "<span class='percentage'>" + percentageString + "<br/> " + rawNumString + " Deaths </span><br />"
       // + d.value + " of " + totalSize + "<br />"
     );
 
@@ -801,12 +800,12 @@ function sunburstDraw(scope, element) {
 
     // Update percentage at the lastCrumb.
     lastCrumb
-      .attr("x", 4.6 * (b.w + b.s))
+      .attr("x", 4.9 * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-weight", 600)
-      .text(rawNumString);
+      .text(rawNumString + " Deaths");
   }
 
 
