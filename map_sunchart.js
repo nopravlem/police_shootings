@@ -577,7 +577,7 @@ function sunburstDraw(scope, element) {
     }
 
     lastCrumb
-      .attr("x", 4.6 * (b.w + b.s))
+      .attr("x", 4.9 * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
@@ -644,6 +644,7 @@ function sunburstDraw(scope, element) {
 
   // helper function mouseover to handle mouseover events/animations and calculation of ancestor nodes etc
   function mouseover(d) {
+    console.log(totalSize);
     // build percentage string
     var percentage = (100 * d.value / totalSize).toPrecision(3);
     var percentageString = percentage + "%";
