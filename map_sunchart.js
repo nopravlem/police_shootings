@@ -433,7 +433,7 @@ function sunburstDraw(scope, element) {
     right: radius / 2
   };
 
-  var colors = d3.scale.category10();
+  var colors = d3.scale.category20d();
   var totalSize = 0;
 
   var partition = d3.layout.partition()
