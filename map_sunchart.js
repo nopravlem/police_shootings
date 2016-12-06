@@ -650,6 +650,7 @@ function sunburstDraw(scope, element) {
 
   // helper function mouseover to handle mouseover events/animations and calculation of ancestor nodes etc
   function mouseover(d) {
+    console.log(totalSize);
     // build percentage string
     var percentage = (100 * d.value / totalSize).toPrecision(3);
     var percentageString = percentage + "%";

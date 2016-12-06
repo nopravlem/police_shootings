@@ -11,6 +11,11 @@ body {
 	font-family: 'Montserrat', sans-serif;
 }
 
+#subtitle {
+	color: #38aecc;
+	text-align: center;
+}
+
 /*map things*/
 .us_country_map {
 	float: left;
