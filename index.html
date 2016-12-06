@@ -14,11 +14,10 @@
 
   <body>
     <h3 id="page_title">Fatal Police Shootings</h3>
-    <h3 id="subtitle">There have been 1546 fatal police shootings in the U.S. since January 1, 2015</h3>
     <div class="wrap">
-
-      <div class="us_country_map"></div>
-
+      <div class="us_country_map">
+        <h3 id="subtitle">There have been 1546 fatal police shootings in the U.S. since January 1, 2015</h3>
+      </div>
       <div class="sunburst" ng-controller="MainCtrl as sunburst">
         <div class="visualization">
           <sunburst data="sunburst.data"></sunburst>
@@ -71,7 +70,7 @@
               </div>
             </td>
           <tr id="body_filter">
-            <td class="category">Body Camera:</td>
+            <td class="category">BodyCam:</td>
          <!--      <span></span>
               <input onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="body_cam">
              -->
@@ -82,6 +81,7 @@
           </tr>
         </table>
       </div>
+
     </div>
 
     <script src="/d3/d3.js"></script>
