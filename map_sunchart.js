@@ -7,6 +7,7 @@ var genFiltered_data = new Set();
 var camFiltered_data = new Set();
 var ageFiltered_data = new Set();
 var allFiltered_data = new Set();
+var state_names = {};
 
 
 
@@ -14,6 +15,7 @@ var allFiltered_data = new Set();
 var width = 780,
     height = 500,
     active = d3.select(null);
+
 
 var projection = d3.geo.albersUsa()
     .scale(1000)
@@ -37,7 +39,7 @@ var svg = d3.select(".us_country_map").append("svg")
 var tooltip = d3.select(".us_country_map").append("div")
         // .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("color", "#783eff")
+        .style("color", "black")
         .style("background", "white")
         .style("border", "0px")
         .style("border-radius", "8px")
@@ -47,10 +49,14 @@ var tooltip = d3.select(".us_country_map").append("div")
 var deets_on_demand = d3.select(".us_country_map").append("div")
           .style("position", "absolute")
           .style("background", "white")
-          .style("color", "#783eff")
           .style("color", "black")
           .style("border", "2px")
+          .style("font-family", "sans-serif")
           .style("border-radius", "10px");
+
+var state_total = d3.select(".us_country_map").append("div")
+          .style("background", "white")
+          .style("color", "black")
 
 // var close_deets_on_demand = deets_on_demand.append("")
 
@@ -68,13 +74,19 @@ svg
 
 d3.json("./stateMap/us.json", function(error, us) {
   if (error) throw error;
-
   g.selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
     .enter().append("path")
       .attr("d", path)
       .attr("class", "feature")
       .on("click", clicked);
+  var data = topojson.feature(us, us.objects.states).features;
+    d3.csv("us-state-names.csv", function(tsv){
+    // extract just the names and Ids
+    tsv.forEach(function(d,i){
+      // console.log(d["id code name"])
+      state_names[d.id] = d.code;
+    })});
 
   g.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
@@ -186,6 +198,7 @@ function update() {
             } else if(filters[i].value == "NULL" && filters[i].checked == true) {
               if(filters[i].value == d[filters[i].name]) {
                 ageFiltered_data.add(d);
+                console.log(ageFiltered_data.size);
               }
             }
           }
@@ -236,7 +249,7 @@ const draw_circles = (data, city_frequency) => {
     .on("mouseover", function(d) {
       tooltip.transition()
       .duration(400)
-      .style("opacity", 0.75);
+      .style("opacity", 1);
       d3.select(this).style("cursor", "pointer");
       //fill the tooltip with the appropriate data
       tooltip.html("<strong>City: " + d["city-state"] + "</strong><br/>"
@@ -257,7 +270,7 @@ const draw_circles = (data, city_frequency) => {
       .style("z-index", -1);
       // <a href=\"javascript:sort_table_by_column(false, 'name_col', 'deets_on_demand')\">&#8595</a>
       let city_data = get_data_by_city(d["city-state"]);
-      let html_string = "<table id='deets_on_demand'>";
+      let html_string = "<div style = 'overflow-y: scroll; max-height: 200px;'><table id='deets_on_demand'>";
       html_string += "<thead>"
                   + "<th class='date_col'>Date"
                     + "<a id=\"date_col\" href=\"javascript:sort_table_by_column('date_col', 'deets_on_demand')\">&#8593</a> "
@@ -295,7 +308,7 @@ const draw_circles = (data, city_frequency) => {
                     + "<td class='body_camera_col'>" + e.body_camera + "</td>"
                     + "</tr>"
       })
-      html_string += "</tbody></table>"
+      html_string += "</tbody></table></div>"
 
       /**Add the details on demand**/
       deets_on_demand.html("<strong style='margin-left: 10px; font-size: 18px'>" + d["city-state"] + "</strong>"
@@ -347,10 +360,27 @@ function sort_table_by_column(column_class, table_id) {
 
 
 var map_frequency_to_radius = function(city, frequency) {
-  return Math.sqrt(30 * frequency[city]/Math.PI)
+  return Math.sqrt(40 * frequency[city]/Math.PI)
+}
+
+var get_state_stats = function(state) {
+  var counter = 0;
+  for (var i = 0; i < modified_data.length; i++) {
+      if (modified_data[i].state === state) {
+        counter++;
+      }
+  }
+  return counter;
 }
 
 function clicked(d) {
+  state_total
+    .style("opacity", 1)
+    .style("background", "#232323")
+    .style("text-align", "center")
+    .style("color", "white")
+    .style("font-size", "20px")
+    .text(state_names[d.id] + " shootings: " +   get_state_stats(state_names[d.id]));
   if (active.node() === this) return reset();
   active.classed("active", false);
   active = d3.select(this).classed("active", true);
@@ -365,13 +395,14 @@ function clicked(d) {
 
   svg.transition()
       .duration(750)
-      .call(zoom.translate(translate).scale(scale).event);
+      .call(zoom.translate(translate).scale(scale).event)
 
   view_country = !view_country;
   draw_circles(modified_data, city_frequency)
 }
 
 function reset() {
+  state_total.style("opacity", 0)
   active.classed("active", false);
   active = d3.select(null);
 
@@ -389,7 +420,7 @@ function zoomed() {
   gPins.selectAll("circle").attr("r", (d) => {
     if (!already_drawn_dot.has(d["city-state"])) {
       already_drawn_dot.add(d["city-state"])
-      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale
+      return map_frequency_to_radius(d["city-state"], city_frequency) / d3.event.scale;
     } else {
       return 0;
     }
@@ -600,7 +631,6 @@ function sunburstDraw(scope, element) {
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-weight", 600)
-      // .text("Hover");
   }
 
 
@@ -688,7 +718,7 @@ function sunburstDraw(scope, element) {
 
     // update summary
     summary.html(
-      "<span class='percentage'>" + percentageString + "</span><br />"
+      "<span class='percentage'>" + percentageString + "<br/> " + rawNumString + " Deaths </span><br />"
       // + d.value + " of " + totalSize + "<br />"
     );
 
@@ -813,12 +843,12 @@ function sunburstDraw(scope, element) {
 
     // Update percentage at the lastCrumb.
     lastCrumb
-      .attr("x", 4.6 * (b.w + b.s))
+      .attr("x", 4.9 * (b.w + b.s))
       .attr("y", b.h / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-weight", 600)
-      .text(rawNumString);
+      .text(rawNumString + " Deaths");
   }
 
   // Take a 4-column CSV of ["sequence", "stage", "node", "value"] and
