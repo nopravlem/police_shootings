@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html ng-app="Sunburst">
 
@@ -98,3 +99,105 @@
     </br></br></br></br></br></br>
   </body>
 </html>
+=======
+<!DOCTYPE html>
+<html ng-app="Sunburst">
+
+  <head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:300" rel="stylesheet">
+    <link href='style.css' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  </head>
+
+  <body>
+    <h3 id="page_title">Fatal Police Shootings</h3>
+    <div class="wrap">
+      <div class="us_country_map">
+        <h3 id="subtitle">There have been 1546 documented fatal police shootings in the U.S. since January 1, 2015</h3>
+      </div>
+      <div class="sunburst" ng-controller="MainCtrl as sunburst">
+        <div class="visualization">
+          <sunburst data="sunburst.data"></sunburst>
+        </div>
+      </div>
+
+      <div class="filters">
+        <table>
+          <col width="60">
+          <tr id="gender_filter">
+            <td class="category">Gender:</td>
+            <td id="filters-gender">
+              <div class="row">
+                <label class="btn"><input class="checkbox" id="Male_id" onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="M">Male</label>
+                <label class="btn"><input class="checkbox" id="Female_id" onclick="toggleCheckbox(this)" type="checkbox" name="gender" value="F">Female</label>
+            </div>
+            </td>
+          </tr>
+          <tr id="race_filter">
+            <td class="category">Race:</td>
+            <td id="filters-race">
+              <div class="row">
+                <label class="btn"><input class="checkbox" id="Asian_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Asian">Asian</label>
+                <label class="btn"><input class="checkbox" id="Black_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Black">Black</label>
+                <label class="btn"><input class="checkbox" id="Hispanic_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Hispanic">Hispanic</label>
+                <label class="btn"><input class="checkbox" id="NativeAmerican_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Native American">Native</label>
+              </div>
+
+              <div class="row">
+                <label class="btn"><input class="checkbox" id="Other_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="Other">Other</label>
+                <label class="btn"><input class="checkbox" id="White_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="White">White</label>
+                <label class="btn"><input class="checkbox" id="Unknown_id" onclick="toggleCheckbox(this)" type="checkbox" name="race" value="NULL">Unknown</label>
+              </div>
+            </td>
+          </tr>
+          <tr id="age_filter">
+            <td class="category">Age:</td>
+            <td id="filters-age">
+              <div class="row">
+                <label class="btn"><input class="checkbox" id="Youth_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Youth">Under 20</label>
+                <label class="btn"><input class="checkbox" id="Twenties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Twenties">20s</label>
+                <label class="btn"><input class="checkbox" id="Thirties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Thirties">30s</label>
+                <label class="btn"><input class="checkbox" id="Forties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Forties">40s</label>
+              </div>
+
+              <div class="row">
+                <label class="btn"><input class="checkbox" id="Fifties_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Fifties">50s</label>
+                <label class="btn"><input class="checkbox" id="Elderly_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="Elderly">60 and Older</label>
+                <label class="btn"><input class="checkbox" id="UnknownAge_id" onclick="toggleCheckbox(this)" type="checkbox" name="age" value="NULL">Unknown</label>
+              </div>
+            </td>
+          <tr id="body_filter">
+            <td class="category">BodyCam:</td>
+         <!--      <span></span>
+              <input onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="body_cam">
+             -->
+            <td id="filters-bodycam">
+              <label class="btn"><input class="checkbox" id="BodyCam_id" onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="TRUE">Yes</label>
+              <label class="btn"><input class="checkbox" id="NoBodyCam_id" onclick="toggleCheckbox(this)" type="checkbox" name="body_camera" value="FALSE">No</label>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+
+    <script src="./d3/d3.js"></script>
+    <script src="//d3js.org/topojson.v1.min.js"></script>
+    <script src="http://code.angularjs.org/1.3.5/angular.js"></script>
+    <script src="app.js"></script>
+    <script src="map_sunchart.js"></script>
+
+    <script>
+      // Make example display correctly in an iframe on bl.ocks.org
+      d3.select(self.frameElement).style("height", "1000px");
+    </script>
+
+    </br></br></br></br></br></br>
+  </body>
+</html>
+>>>>>>> 9fd8c16bffeb276d004abca06ee138cbf8977d2a
