@@ -8,6 +8,9 @@ var camFiltered_data = new Set();
 var ageFiltered_data = new Set();
 var allFiltered_data = new Set();
 
+
+
+
 var width = 780,
     height = 500,
     active = d3.select(null);
@@ -116,6 +119,7 @@ const get_data_by_city = (city) => {
   });
   return city_data;
 }
+
 //method to update map based on user selected filters
 function update() {
   raceFiltered_data = new Set();
@@ -210,6 +214,7 @@ function update() {
   });
 }
 
+
 const draw_circles = (data, city_frequency) => {
   already_drawn_dot = new Set();
   gPins.selectAll("circle")
@@ -251,27 +256,33 @@ const draw_circles = (data, city_frequency) => {
       tooltip.transition()
       .style("opacity", 0)
       .style("z-index", -1);
+      // <a href=\"javascript:sort_table_by_column(false, 'name_col', 'deets_on_demand')\">&#8595</a>
       let city_data = get_data_by_city(d["city-state"]);
       let html_string = "<table id='deets_on_demand'>";
       html_string += "<thead>"
-                  + "<th class='date_col'>Date  <a href=\"javascript:sort_table_by_column(true, 'date_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'date_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "<th class='date_col'>Date"
+                    + "<a id=\"date_col\" href=\"javascript:sort_table_by_column('date_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th>"
 
-                  + "<th class='name_col'>Name  <a href=\"javascript:sort_table_by_column(true, 'name_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'name_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "<th class='name_col'>Name"
+                    + "<a id=\"name_col\" href=\"javascript:sort_table_by_column('name_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th>"
 
-                  + "<th class='race_col'>Race  <a href=\"javascript:sort_table_by_column(true, 'race_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'race_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "<th class='race_col'>Race"
+                    + "<a id=\"race_col\" href=\"javascript:sort_table_by_column('race_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th>"
 
-                  + "<th class='gender_col'>Gender  <a href=\"javascript:sort_table_by_column(true, 'gender_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'gender_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "<th class='gender_col'>Gender"
+                    + "<a id=\"gender_col\" href=\"javascript:sort_table_by_column('gender_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th>"
 
-                  + "<th class='age_col'>Age  <a href=\"javascript:sort_table_by_column(true, 'age_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'age_col', 'deets_on_demand')\">&#8595</a></th>"
+                  + "<th class='age_col'>Age"
+                    + "<a id=\"age_col\" href=\"javascript:sort_table_by_column('age_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th>"
 
-                + "<th class='body_camera_col'>Body Camera  <a href=\"javascript:sort_table_by_column(true, 'body_camera_col', 'deets_on_demand')\">&#8593</a> "
-                  + "<a href=\"javascript:sort_table_by_column(false, 'body_camera_col', 'deets_on_demand')\">&#8595</a></th>"
-                  + "</thead><tbody>"
+                  + "<th class='body_camera_col'>Body Camera"
+                    + "<a id=\"body_camera_col\" href=\"javascript:sort_table_by_column('body_camera_col', 'deets_on_demand')\">&#8593</a> "
+                  + "</th><tbody>"
       let i = 0;
       city_data.forEach((e) => {
         i++;
@@ -300,9 +311,11 @@ const draw_circles = (data, city_frequency) => {
     });
 }
 
-function sort_table_by_column(ascending, column_class, table_id) {
+var name_asc = true;
+function sort_table_by_column(column_class, table_id) {
   var tbody = document.getElementById(table_id).getElementsByTagName("tbody")[0];
   var rows = tbody.getElementsByTagName("tr");
+  var arrow = document.getElementById(column_class).innerHTML;
   var unsorted = true;
   while (unsorted) {
     unsorted = false
@@ -315,16 +328,22 @@ function sort_table_by_column(ascending, column_class, table_id) {
         value = new Date(value);
         nextValue = new Date(nextValue);
       }
-      if (ascending ? value > nextValue : value < nextValue) {
+      if ((arrow === "↑") ? value > nextValue : value < nextValue) {
           tbody.insertBefore(nextRow, row);
           unsorted = true;
       }
     }
+
   }
+
+  if(arrow === "↑") { document.getElementById(column_class).innerHTML = "&#8595";}
+  else { document.getElementById(column_class).innerHTML = "&#8593"; }
+
   rows = tbody.getElementsByTagName("tr");
   for (var i = 0; i < rows.length; i++) {
       rows[i].style["background-color"] = (i + 1) % 2 ? '#B8D1F3' : '#DAE5F4'
   }
+
 }
 
 
@@ -582,7 +601,7 @@ function sunburstDraw(scope, element) {
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-weight", 600)
-      .text("Hover");
+      // .text("Hover");
   }
 
 
