@@ -66,7 +66,7 @@ svg
     //.call(zoom) // delete this line to disable free zooming
     .call(zoom.event);
 
-d3.json("/stateMap/us.json", function(error, us) {
+d3.json("./stateMap/us.json", function(error, us) {
   if (error) throw error;
 
   g.selectAll("path")
@@ -186,7 +186,6 @@ function update() {
             } else if(filters[i].value == "NULL" && filters[i].checked == true) {
               if(filters[i].value == d[filters[i].name]) {
                 ageFiltered_data.add(d);
-                console.log(ageFiltered_data.size);
               }
             }
           }

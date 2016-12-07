@@ -9,7 +9,6 @@
     var ctrl = this;
     init();
 
-
     // function init
     function init() {
       // initialize controller variables
@@ -40,7 +39,6 @@
     }
   }
 
-
   // directive function sunburst
   function sunburst() {
       return {
@@ -50,7 +48,6 @@
       };
 
   }
-
 
   // directive function onReadFile
   function onReadFile($parse) {
